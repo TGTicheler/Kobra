@@ -13,14 +13,15 @@
 
 import string
 
-LHAAK = 'L-HAAKJE'
-RHAAK = 'R-HAAKJE'
+LPAR = 'LEFT PARENTHESIS'
+RPAR = 'RIGHT PARENTHESIS'
 LAMBDA = 'LAMBDA'
 VAR = 'VARIABELE'
 APPL = 'APPLICATION'
 END = 'END'
 EMPTY = 'EMPTY'
 
+# token objects 
 class Token:
     def __init__(self, type, var):
         self.type = type
@@ -31,21 +32,25 @@ class Token:
             return f'{self.type}:{self.var}'
         return f'{self.type}'
     
+# gets a string gives the tokens of the string
+# and checks if there are illegal characters
 def verwerk(invoer):
     tokens = []
     grootte = len(invoer)
     i = 0
+    # goes through the string and creates an array of tokens
     while i < grootte:
         if invoer[i] == ' ' or invoer[i] == '\n' or invoer[i] == '\r':
-            pass
+            pass # these are skipped
         elif invoer[i] == '(':
-            tokens.append(Token(LHAAK, "("))
+            tokens.append(Token(LPAR, "("))
         elif invoer[i] == ')':
-            tokens.append(Token(RHAAK, ")"))
+            tokens.append(Token(RPAR, ")"))
         elif invoer[i] == '\\' or invoer[i] == 'λ':
             tokens.append(Token(LAMBDA, "\\"))
         elif invoer[i] in string.ascii_letters:
             var = ''
+            # one variable can have multiple letters or digits
             while(invoer[i] in string.ascii_letters or invoer[i].isnumeric()):
                 var = var + invoer[i]
                 i += 1
@@ -58,6 +63,6 @@ def verwerk(invoer):
             exit(1)
         i += 1
 
-    tokens.append(Token(END, "END"))
+    tokens.append(Token(END, "END")) # End of tokens
 
     return tokens

@@ -12,10 +12,12 @@
 import Token
 import Parser
 
-invoer = input()
-verwerkt = Token.verwerk(invoer)
-geparset = Parser.Pars(verwerkt)
-root = geparset.parse()
+givenString = input()
+tokens = Token.verwerk(givenString)
+obj = Parser.Pars(tokens)
+root = obj.getRoot()
+root.printTree()
+print()
 
 
 print("exit status 0")
