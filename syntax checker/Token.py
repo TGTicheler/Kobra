@@ -15,7 +15,6 @@ class Token:
 
 def verwerk(invoer):
     tokens = []
-    juist = True
     for i in range(len(invoer)):
         if invoer[i] == '(':
             tokens.append(Token(LHAAK))
@@ -26,11 +25,11 @@ def verwerk(invoer):
         elif invoer[i][0] in string.ascii_lowercase:
             tokens.append(Token(VAR))
         else:
-            print("Onjuiste invoer")
-            juist = False
+            print(f"Onjuiste invoer: {invoer[i]}")
+            exit()
             
     print(tokens)
-    return tokens, juist
+    return tokens
 
 def hallo():
     print('Hello world')
