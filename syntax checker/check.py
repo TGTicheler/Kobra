@@ -18,5 +18,5 @@ gefilterd = list(filter(None, geknipt))
 print(geknipt)
 print(gefilterd)
 
-Token.verwerk(gefilterd)
-print(gefilterd)
+verwerkt = Token.verwerk(gefilterd)
+print(f'verwerkt: {verwerkt}')
