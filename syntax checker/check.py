@@ -1,5 +1,3 @@
-#Beetje testen
-
 #  ____  __.          ___.                      
 # |    |/ _|   ____   \_ |__   _______  _____   
 # |      <    /  _ \   | __ \  \_  __ \ \__  \  
@@ -7,12 +5,18 @@
 # |____|__ \  \____/   |___  /  |__|    (____  /
 #         \/               \/                \/ 
 
+
+import Token
+
 # leest vanuit de command line in
 invoer = input('---< ')
 
 geknipt = invoer.split(' ')
 #filtert de lege elementen uit geknipt
-gefiltert = list(filter(None, geknipt))
+gefilterd = list(filter(None, geknipt))
 
 print(geknipt)
-print(gefiltert)
+print(gefilterd)
+
+Token.verwerk(gefilterd)
+print(gefilterd)
