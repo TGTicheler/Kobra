@@ -31,7 +31,7 @@ def verwerk(invoer):
             tokens.append(Token(BSLASH))
         elif invoer[i] in string.ascii_letters:
             var = ''
-            while(invoer[i] in string.ascii_letters or invoer[i].isnumeric()):
+            while(invoer[i].isalpha() or invoer[i].isnumeric()):
                 var = var + invoer[i]
                 print(i)
                 i += 1
