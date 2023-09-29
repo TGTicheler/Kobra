@@ -11,12 +11,5 @@ import Token
 # leest vanuit de command line in
 invoer = input('---< ')
 
-geknipt = invoer.split(' ')
-#filtert de lege elementen uit geknipt
-gefilterd = list(filter(None, geknipt))
+verwerkt = Token.verwerk(invoer)
 
-print(geknipt)
-print(gefilterd)
-
-verwerkt = Token.verwerk(gefilterd)
-print(f'verwerkt: {verwerkt}')

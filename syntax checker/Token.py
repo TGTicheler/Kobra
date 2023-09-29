@@ -6,30 +6,44 @@ BSLASH = 'BSLASH'
 VAR = 'VARIABELE'
 
 class Token:
-    def __init__(self, soort):
+    def __init__(self, soort, var=None):
         self.soort = soort
+        self.var = var
 
     def __repr__(self):
+        if self.var:
+            return f'{self.soort}:{self.var}'
         return f'{self.soort}'
     
 
 def verwerk(invoer):
     tokens = []
-    for i in range(len(invoer)):
-        if invoer[i] == '(':
+    grootte = len(invoer)
+    i = 0
+    while i < grootte:
+        if invoer[i] == ' ':
+            pass
+        elif invoer[i] == '(':
             tokens.append(Token(LHAAK))
         elif invoer[i] == ')':
             tokens.append(Token(RHAAK))
         elif invoer[i] == '\\':
             tokens.append(Token(BSLASH))
-        elif invoer[i][0] in string.ascii_lowercase:
-            tokens.append(Token(VAR))
+        elif invoer[i] in string.ascii_letters:
+            var = ''
+            while(invoer[i] in string.ascii_letters or invoer[i].isnumeric()):
+                var = var + invoer[i]
+                print(i)
+                i += 1
+            i-=1
+            tokens.append(Token(VAR, var))
         else:
-            print(f"Onjuiste invoer: {invoer[i]}")
+            print(f"Onjuiste invoer")
             exit()
-            
-    print(tokens)
+        i += 1
+
     return tokens
 
-def hallo():
-    print('Hello world')
+# def check(tokens):
+#     geefDoor = []
+#     if()
