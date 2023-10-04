@@ -7,9 +7,11 @@
 
 
 import Token
+# lijst = [0]
+# Token.test(lijst)
+# print(lijst)
+
 
 # leest vanuit de command line in
 invoer = input('---< ')
-
-verwerkt = Token.verwerk(invoer)
-
+Token.run(invoer)
