@@ -1,3 +1,9 @@
-hallo = 'ds'
+def oke(lijst):
+    lijst.pop(1)
 
-print(len(hallo))
+
+lol = ['hal', 'hloijd', 'odj']
+
+oke(lol)
+
+print(lol)
