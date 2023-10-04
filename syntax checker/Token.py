@@ -24,7 +24,7 @@ def verwerk(invoer):
     grootte = len(invoer)
     i = 0
     while i < grootte:
-        if invoer[i] == ' ':
+        if invoer[i] == ' ' or invoer[i] == '\n' or invoer[i] == '\r':
             pass
         elif invoer[i] == '(':
             tokens.append(Token(LHAAK))
@@ -92,9 +92,9 @@ if (root.data.soort == EMPTY):
 
 def expr(lijst, ik, cursor):
     print('expr')
-    ik[0] = biNode(Token(APPL))
-    if(lExpr(lijst, ik[0].left, cursor)):
-        if(dashExpr(lijst, ik[0].right, cursor)):
+    ik = biNode(Token(APPL))
+    if(lExpr(lijst, ik.left, cursor)):
+        if(dashExpr(lijst, ik.right, cursor)):
             return True
     else:
         return False
@@ -104,15 +104,15 @@ def expr(lijst, ik, cursor):
 def dashExpr(lijst, ik, cursor):
     print('dashExpr')
     if(cursor[0] < len(lijst)):
-        ik[0] = biNode(Token(APPL))
-        if(lExpr(lijst, ik[0].left, cursor) == True):
-            teruggegeven = dashExpr(lijst, ik[0].right, cursor)
+        ik = biNode(Token(APPL))
+        if(lExpr(lijst, ik.left, cursor) == True):
+            teruggegeven = dashExpr(lijst, ik.right, cursor)
             if(teruggegeven[1] == True):
                 if(teruggegeven[0] == True):
-                    ik[0].right = Token(EMPTY)
+                    ik.right = Token(EMPTY)
                     return True, True
                 else:
-                    dashExpr(lijst, ik[0].right, cursor)
+                    dashExpr(lijst, ik.right, cursor)
                     return False, True
             else:
                 return False, False
@@ -126,12 +126,12 @@ def lExpr(lijst, ik,cursor):
         if(lijst[cursor[0]].soort == BSLASH):
             cursor[0] += 1
             if(lijst[cursor[0]].soort == VAR):
-                ik[0] = biNode(Token(BSLASH))
-                ik[0].left = varNode(lijst[cursor[0]].var)
-                lExpr(lijst, ik[0].right, cursor)
+                ik = biNode(Token(BSLASH))
+                ik.left = varNode(lijst[cursor[0]].var)
+                lExpr(lijst, ik.right, cursor)
             else:
                 return False
-        elif (pExpr(lijst, ik[0], cursor) == True):
+        elif (pExpr(lijst, ik, cursor) == True):
             return True
         else:
             return False
@@ -142,7 +142,7 @@ def pExpr(lijst, ik, cursor):
         if lijst[cursor[0]].soort == LHAAK:
             cursor[0] += 1
             print('LHAAKJE-----------')
-            if(expr(lijst, ik[0], cursor) == True):
+            if(expr(lijst, ik, cursor) == True):
                 if(lijst[cursor[0]].soort == RHAAK):
                     print('RHAAKJE---------------------')
                     cursor[0] += 1
@@ -153,7 +153,7 @@ def pExpr(lijst, ik, cursor):
                 return False
         elif (lijst[cursor[0]].soort == VAR):
             print('VARIABELE--------------')
-            ik[0] = varNode(lijst[cursor[0]].var)
+            ik = varNode(lijst[cursor[0]].var)
             cursor[0] += 1
             return True
         else:
@@ -162,11 +162,10 @@ def pExpr(lijst, ik, cursor):
 def run(invoer):
     verwerkt = verwerk(invoer)
 
-    root = [0]
+    root = biNode(Token(APPL))
     cursor = [0]
 
     expr(verwerkt, root, cursor)
-    APPL = 'APPLICATION'
 
-    if (root.data.soort == APPL):
-        print('oke lets go')
+
+    biNode.PrintTree(root)
