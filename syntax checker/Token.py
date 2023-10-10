@@ -86,6 +86,7 @@ class Parser:
         self.tokens = tokens
         self.tok_idx = -1
         self.lhaakjes = 0
+        self.parsedTokens = []
 
 
     def advance(self):
@@ -107,15 +108,18 @@ class Parser:
             exit()
         elif(tok.soort == VAR):
             print(f'Variabele: {tok}')
+            self.parsedTokens.append(tok.var)
             return True
         elif(tok.soort == LHAAK):
             print('Lhaakje')
+            self.parsedTokens.append('(')
             self.lhaakjes += 1
             if(self.expr() == True):
                 tok = self.current_tok
                 if(tok.soort == RHAAK):
                     self.lhaakjes -= 1
                     print('Rhaakje')
+                    self.parsedTokens.append(')')
                     return True
                 else:
                     print('ERROR geen Rhaakje --------------')
