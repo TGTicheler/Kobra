@@ -5,13 +5,18 @@
 # |____|__ \  \____/   |___  /  |__|    (____  /
 #         \/               \/                \/ 
 
-
 import Token
-# lijst = [0]
-# Token.test(lijst)
-# print(lijst)
-
+import Parser
+import string
 
 # leest vanuit de command line in
 invoer = input('---< ')
-Token.run(invoer)
+
+verwerkt = Token.verwerk(invoer)
+print(verwerkt)
+geparset = Parser.Pars(verwerkt)
+ast = geparset.parse()
+print(ast)
+
+
+exit(1)
