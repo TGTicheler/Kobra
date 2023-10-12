@@ -7,16 +7,16 @@
 
 import Token
 import Parser
-import string
 
 # leest vanuit de command line in
 invoer = input('---< ')
 
 verwerkt = Token.verwerk(invoer)
-print(verwerkt)
 geparset = Parser.Pars(verwerkt)
-ast = geparset.parse()
-print(ast)
+root = geparset.parse()
+print("De binaire boom in pre-order:")
+root.PrintTree()
+print()
 
 
 exit(1)
