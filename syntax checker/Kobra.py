@@ -4,6 +4,9 @@
 # |    |  \  (  <_> )  | \_\ \  |  | \/  / __ \_
 # |____|__ \  \____/   |___  /  |__|    (____  /
 #         \/               \/                \/ 
+# Paul Tielens s3612031
+# Concepts of Programming Languages, 2023
+
 
 import Token
 import Parser

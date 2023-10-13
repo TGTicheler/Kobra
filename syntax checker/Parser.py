@@ -1,3 +1,8 @@
+# Paul Tielens s3612031
+# Concepts of Programming Languages, 2023
+
+# Parses an array of tokens of lambda calculus and makes a binary tree
+
 import Token
 
 LHAAK = 'L-HAAKJE'
