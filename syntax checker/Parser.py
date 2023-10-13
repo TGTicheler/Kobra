@@ -6,38 +6,30 @@ LAMBDA = 'LAMBDA'
 VAR = 'VARIABELE'
 APPL = 'APPLICATION'
 END = 'END'
+EMPTY = 'EMPTY'
 
-class biNode:
-    def __init__(self, var):
+class Node:
+    def __init__(self, token):
         self.left = None
         self.right = None
-        self.var = var
+        self.token = token
         self.parent = None
 
     def __repr__(self):
-        self.PrintTree()
-        print()
+        if self.type == VAR:
+            return f'{self.type}:{self.var}'
+        return f'{self.type}'
 
     #pre-order
     def PrintTree(self):
-        print(self.var, " ", end= "")
+        print(self.token.var, " ", end= "")
 
         if self.left:
             self.left.PrintTree()
 
         if self.right:
             self.right.PrintTree()
-                
-class varNode:
-    def __init__(self, var):
-        self.var = var
-        self.parent = None
-    
-    def __repr__(self):
-        print(self.var)
 
-    def PrintTree(self):
-        print(self.var, " ", end= "")
 
 
 class Pars:
@@ -56,15 +48,41 @@ class Pars:
 
     def parse(self):
         juist, self.root = self.expr()
+        self.stringTeruggeven(self.root)
+        print()
         return self.root
+
     
+    def stringTeruggeven(self, node):
+        if(node.token.soort == VAR):
+            print(node.token.var, end="")
+            return
+
+        print("(", end="")
+
+        if (node.token.soort == LAMBDA):
+            print(f"{node.token.var}", end="")
+            self.stringTeruggeven(node.left)
+            print(" ", end="")
+            self.stringTeruggeven(node.right)
+        elif (node.token.soort == APPL):
+            self.stringTeruggeven(node.left)
+            print(" ", end="")
+            self.stringTeruggeven(node.right)
+
+        print(")", end="")
+
+
+        
+
+
     def pExpr(self):
         tok = self.current_tok
         if(self.lhaakjes == 0 and tok.soort == RHAAK):
             print('ERROR een rhaakje zonder lhaakje---------')
             exit(0)
         elif(tok.soort == VAR):
-            return True, varNode(tok.var)
+            return True, Node(Token.Token(VAR, tok.var))
         elif(tok.soort == LHAAK):
             self.lhaakjes += 1
             juist, node = self.expr()
@@ -80,7 +98,7 @@ class Pars:
                 print('ERROR geen expressie in ( )---------------')
                 exit(0)
 
-        return False, varNode("EMPTY")
+        return False, Node(Token.Token(EMPTY, "EMPTY"))
         
     def lExpr(self):
         self.advance()
@@ -92,10 +110,10 @@ class Pars:
             return True, node
         elif(tok.soort == LAMBDA):
             self.advance()
-            node = biNode("\\")
+            node = Node(Token.Token(LAMBDA, "\\"))
             tok = self.current_tok
             if(tok.soort == VAR):
-                node.left = varNode(tok.var)
+                node.left = Node(Token.Token(VAR, tok.var))
                 juist, node.right = self.lExpr()
                 if(juist == False):
                     print('ERROR mist lExpr-------------')
@@ -105,20 +123,20 @@ class Pars:
                 print('ERROR geen variabele bij Lambda-----------------')
                 exit(0)
         
-        return False, varNode("EMPTY")
+        return False, Node(Token.Token(EMPTY, "EMPTY"))
     
     def dashExpr(self):
         juist, left = self.lExpr()
         if(juist == True):
             nietLeeg, right = self.dashExpr()
             if(nietLeeg == True):
-                node = biNode( "@")
+                node = Node(Token.Token(APPL, "@"))
                 node.left = left
                 node.right = right
             else:
                 node = left
             return True, node
-        return False, varNode("EMPTY")
+        return False, Node(Token.Token(EMPTY, "EMPTY"))
 
     def expr(self):
         juist, left = self.lExpr()
@@ -127,7 +145,7 @@ class Pars:
             exit(0)
         nietLeeg, right = self.dashExpr()
         if(nietLeeg == True):
-            node = biNode( "@")
+            node = Node(Token.Token(APPL, "@"))
             node.left = left
             node.right = right
         else:

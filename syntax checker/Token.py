@@ -6,14 +6,15 @@ LAMBDA = 'LAMBDA'
 VAR = 'VARIABELE'
 APPL = 'APPLICATION'
 END = 'END'
+EMPTY = 'EMPTY'
 
 class Token:
-    def __init__(self, soort, var=None):
+    def __init__(self, soort, var):
         self.soort = soort
         self.var = var
 
     def __repr__(self):
-        if self.var:
+        if self.soort == VAR:
             return f'{self.soort}:{self.var}'
         return f'{self.soort}'
     
@@ -26,11 +27,11 @@ def verwerk(invoer):
         if invoer[i] == ' ' or invoer[i] == '\n' or invoer[i] == '\r':
             pass
         elif invoer[i] == '(':
-            tokens.append(Token(LHAAK))
+            tokens.append(Token(LHAAK, "("))
         elif invoer[i] == ')':
-            tokens.append(Token(RHAAK))
+            tokens.append(Token(RHAAK, ")"))
         elif invoer[i] == '\\':
-            tokens.append(Token(LAMBDA))
+            tokens.append(Token(LAMBDA, "\\"))
         elif invoer[i] in string.ascii_letters:
             var = ''
             while(invoer[i] in string.ascii_letters or invoer[i].isnumeric()):
@@ -45,7 +46,7 @@ def verwerk(invoer):
             exit(0)
         i += 1
 
-    tokens.append(Token(END))
+    tokens.append(Token(END, "END"))
 
     return tokens
 

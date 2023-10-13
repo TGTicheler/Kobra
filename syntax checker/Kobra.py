@@ -14,9 +14,5 @@ invoer = input('---< ')
 verwerkt = Token.verwerk(invoer)
 geparset = Parser.Pars(verwerkt)
 root = geparset.parse()
-print("De binaire boom in pre-order:")
-root.PrintTree()
-print()
-
 
 exit(1)
