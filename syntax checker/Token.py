@@ -1,4 +1,4 @@
-# Paul Tielens s3612031
+# Paul Tielens s3612031 ...
 # Concepts of Programming Languages, 2023
 
 # takes in a string and produces an array of tokens from the string
