@@ -1,4 +1,4 @@
-# Paul Tielens s3612031
+# Paul Tielens s3612031 ...
 # Concepts of Programming Languages, 2023
 
 # Parses an array of tokens of lambda calculus and makes a binary tree
@@ -156,3 +156,14 @@ class Pars:
         else:
             node = left
         return True, node
+    
+def connectFamily(node):
+    if node.left != None:
+        node.left.parent = node
+        node.left = connectFamily(node.left)
+
+    if node.right != None:
+        node.right.parient = node
+        node.right = connectFamily(node.right)
+
+    return node
