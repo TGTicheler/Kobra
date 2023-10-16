@@ -53,6 +53,7 @@ class Pars:
 
     def parse(self):
         juist, self.root = self.expr()
+        self.root = connectFamily(self.root)
         self.stringTeruggeven(self.root)
         print()
         return self.root
