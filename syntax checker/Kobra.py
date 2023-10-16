@@ -4,7 +4,7 @@
 # |    |  \  (  <_> )  | \_\ \  |  | \/  / __ \_
 # |____|__ \  \____/   |___  /  |__|    (____  /
 #         \/               \/                \/ 
-# Paul Tielens s3612031
+# Paul Tielens s3612031 ...
 # Concepts of Programming Languages, 2023
 
 
@@ -12,8 +12,10 @@ import Token
 import Parser
 
 # leest vanuit de command line in
-invoer = input('---< ')
-
+print("Filename: ")
+file = input('---< ')
+with open(file) as f:
+    invoer = f.readline()
 verwerkt = Token.verwerk(invoer)
 geparset = Parser.Pars(verwerkt)
 root = geparset.parse()
