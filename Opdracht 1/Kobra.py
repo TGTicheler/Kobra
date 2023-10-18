@@ -14,7 +14,6 @@ import Token as Token
 import Parser
 
 # leest vanuit de command line in
-print("Filename: ")
 invoer = input('---< ')
 verwerkt = Token.verwerk(invoer)
 geparset = Parser.Pars(verwerkt)
