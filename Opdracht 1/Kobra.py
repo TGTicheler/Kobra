@@ -4,7 +4,9 @@
 # |    |  \  (  <_> )  | \_\ \  |  | \/  / __ \_
 # |____|__ \  \____/   |___  /  |__|    (____  /
 #         \/               \/                \/ 
-# Paul Tielens s3612031 ...
+# Paul Tielens s3612031
+# Thom Ticheler s3696820
+# Laura Faas s3443159
 # Concepts of Programming Languages, 2023
 
 
