@@ -1,3 +1,5 @@
+import string
+
 LHAAK = 'L-HAAKJE'
 RHAAK = 'R-HAAKJE'
 LAMBDA = 'LAMBDA'
@@ -12,6 +14,7 @@ class Token:
         self.var = var
 
     def __repr__(self):
+
         if self.soort == VAR:
             return f'{self.soort}:{self.var}'
         return f'{self.soort}'
@@ -50,6 +53,24 @@ def connectFamily(node):
 
     return node
         
+def makeVar(vars):
+    for i in range(len(string.ascii_letters)):
+        if(string.ascii_letters[i] not in vars):
+            return string.ascii_letters[i]
+        
+def collectVars(node, vars):
+    if(node.token.soort == VAR):
+        vars.append(node.token.var)
+    else:
+        if node.left.token.soort == VAR:
+            vars.append(node.left.token.var)
+        else:
+            collectVars(node.left, vars)
+
+        if node.right.token.soort == VAR:
+            vars.append(node.right.token.var)
+        else:
+            collectVars(node.right, vars)
 
 
 root = Node(Token(APPL, '@'))
@@ -69,11 +90,12 @@ print("-------------------")
 root = connectFamily(root)
 root.left.parent.printPreOrder()
 print("-------------------")
-root.right.parent.printPreOrder()
+root.right.right.parent.printPreOrder()
 print("-------------------")
-print(root.right.parent)
-print(root.left.parent)
+root.right.right.parent.parent.printPreOrder()
+print("-------------------")
 
+vars = []
 
-
-
+collectVars(root, vars)
+print(vars)

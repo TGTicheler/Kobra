@@ -10,6 +10,7 @@
 
 import Token
 import Parser
+import reductions
 
 # leest vanuit de command line in
 print("Filename: ")
