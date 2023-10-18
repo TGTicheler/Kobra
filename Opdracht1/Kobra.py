@@ -13,9 +13,7 @@ import Parser
 
 # leest vanuit de command line in
 print("Filename: ")
-file = input('---< ')
-with open(file) as f:
-    invoer = f.readline()
+invoer = input('---< ')
 verwerkt = Token.verwerk(invoer)
 geparset = Parser.Pars(verwerkt)
 root = geparset.parse()
