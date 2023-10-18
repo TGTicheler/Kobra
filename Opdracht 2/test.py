@@ -78,24 +78,28 @@ root.left = Node(Token(VAR, "eerste"))
 root.right = Node(Token(LAMBDA, "\\"))
 root.right.left = Node(Token(VAR, "tweede"))
 root.right.right = Node(Token(VAR, "laatste"))
-
 root.printPreOrder()
-print("---------------------")
-root.left.printPreOrder()
-print("-------------------")
-root.right.printPreOrder()
-print("-------------------")
+root.left.token.var = "verandert lets go"
+print("-----------------")
+root.printPreOrder()
+
+# root.printPreOrder()
+# print("---------------------")
+# root.left.printPreOrder()
+# print("-------------------")
+# root.right.printPreOrder()
+# print("-------------------")
 
 
-root = connectFamily(root)
-root.left.parent.printPreOrder()
-print("-------------------")
-root.right.right.parent.printPreOrder()
-print("-------------------")
-root.right.right.parent.parent.printPreOrder()
-print("-------------------")
+# root = connectFamily(root)
+# root.left.parent.printPreOrder()
+# print("-------------------")
+# root.right.right.parent.printPreOrder()
+# print("-------------------")
+# root.right.right.parent.parent.printPreOrder()
+# print("-------------------")
 
-vars = []
+# vars = []
 
-collectVars(root, vars)
-print(vars)
+# collectVars(root, vars)
+# print(vars)

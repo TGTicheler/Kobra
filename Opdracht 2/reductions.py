@@ -26,12 +26,23 @@ class reduce:
         else:
             self.collectVars(node.left, vars)
             self.collectVars(node.right, vars)
+
+    def changeVars(self, node, oldVar, nwVar):
+        if(node.token.soort == VAR):
+            if(node.token.var == oldVar):
+                node.token.var = nwVar
+        else:
+            node.left = self.changeVars(node.left, vars)
+            node.left = self.changeVars(node.right, vars)
+        return node
     
 
     #krijgt de node met de Lambda in
     def alphaCon(self, node):
         if(node.token.soort == LAMBDA):
-            print("lets go")
+            vars = []
+            self.collectVars(node, vars)
+            nwVar = self.makeVar(vars)
         else:
             print("ERROR: geen lambda in de node")
             exit(0)
