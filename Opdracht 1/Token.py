@@ -31,7 +31,6 @@ class Token:
             return f'{self.soort}:{self.var}'
         return f'{self.soort}'
     
-
 def verwerk(invoer):
     tokens = []
     grootte = len(invoer)
@@ -62,6 +61,3 @@ def verwerk(invoer):
     tokens.append(Token(END, "END"))
 
     return tokens
-
-
-   
