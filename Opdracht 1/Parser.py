@@ -51,8 +51,7 @@ class Pars:
         self.tok_idx = -1
         self.lhaakjes = 0
         self.root = None
-
-
+        
     def advance(self):
         self.tok_idx += 1
         if self.tok_idx < len(self.tokens):
@@ -66,7 +65,6 @@ class Pars:
         print()
         return self.root
 
-    
     def stringTeruggeven(self, node):
         if(node.token.soort == VAR):
             print(node.token.var, end="")
@@ -85,11 +83,7 @@ class Pars:
             self.stringTeruggeven(node.right)
 
         print(")", end="")
-
-
         
-
-
     def pExpr(self):
         tok = self.current_tok
         if(self.lhaakjes == 0 and tok.soort == RHAAK):
