@@ -52,7 +52,7 @@ class reduce:
 
     def replaceNode(self, node, old, new):
         if(node.token.soort == VAR):
-            if(node == old):
+            if(node.token.var == old):
                 node = new
         else:
             node.left = self.replaceNode(node.left, old, new)
@@ -65,7 +65,7 @@ class reduce:
             if(node.left.token.soort == LAMBDA):
                 node.parent = None
                 N = node.right
-                var = node.left.left
+                var = node.left.left.token.var
                 M = node.left.right
                 M = self.replaceNode(M, var, N)
                 return M
@@ -80,11 +80,21 @@ class reduce:
 
 vars = []
 root = Parser.Node(Token.Token(APPL, "@"))
+
 root.left = Parser.Node(Token.Token(LAMBDA, "\\"))
-root.right = Parser.Node(Token.Token(VAR, "a"))
+root.right = Parser.Node(Token.Token(APPL, "@"))
+
+root.right.left = Parser.Node(Token.Token(VAR, "kam aan"))
+root.right.right = Parser.Node(Token.Token(VAR, "je bent er bijna"))
+
 root.left.left = Parser.Node(Token.Token(VAR, "x"))
-root.left.right = Parser.Node(Token.Token(VAR, "z"))
+root.left.right = Parser.Node(Token.Token(APPL, "@"))
+
+root.left.right.left = Parser.Node(Token.Token(VAR, "x"))
+root.left.right.right = Parser.Node(Token.Token(VAR, "x"))
+
 root.printPreOrder()
+print()
 print("-------------------------------------")
 test = reduce()
 root = test.betaRed(root)
