@@ -8,7 +8,7 @@
 # Concepts of Programming Languages, 2023
 
 
-import Opdracht1.Token as Token
+import Token as Token
 import Parser
 
 # leest vanuit de command line in
