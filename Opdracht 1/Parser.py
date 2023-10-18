@@ -43,8 +43,6 @@ class Node:
         if self.right:
             self.right.printPreOrder()
 
-
-
 class Pars:
     def __init__(self, tokens):
         self.tokens = tokens
