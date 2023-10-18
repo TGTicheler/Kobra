@@ -11,8 +11,9 @@ END = 'END'
 EMPTY = 'EMPTY'
 
 class reduce:
-    def __init__(self):
+    def __init__(self, root):
         self.max = 1000
+        self.root = root
 
     def makeVar(self, vars):
         for i in range(len(string.ascii_letters)):
@@ -65,7 +66,12 @@ class reduce:
             if(node.left.token.soort == LAMBDA):
                 node.parent = None
                 N = node.right
+                #kijkt naar de vars in N, let op
+                Nvars = []
+                self.collectVars(N, Nvars)
                 var = node.left.left.token.var
+                if(var in Nvars):
+                    var = self.makeVar()
                 M = node.left.right
                 M = self.replaceNode(M, var, N)
                 return M
@@ -96,7 +102,7 @@ root.left.right.right = Parser.Node(Token.Token(VAR, "x"))
 root.printPreOrder()
 print()
 print("-------------------------------------")
-test = reduce()
+test = reduce(root)
 root = test.betaRed(root)
 root.printPreOrder()
 print()
