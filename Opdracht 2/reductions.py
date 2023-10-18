@@ -44,17 +44,49 @@ class reduce:
             self.collectVars(node, vars)
             nwVar = self.makeVar(vars)
             node = self.changeVars(node, node.left.token.var, nwVar)
+            node = Parser.connectFamily(node)
             return node
         else:
             print("ERROR: geen lambda in de node")
             exit(0)
 
+    def replaceNode(self, node, old, new):
+        if(node.token.soort == VAR):
+            if(node == old):
+                node = new
+        else:
+            node.left = self.replaceNode(node.left, old, new)
+            node.right = self.replaceNode(node.right, old, new)
+
+        return node
+
+    def betaRed(self, node):
+        if(node.token.soort == APPL):
+            if(node.left.token.soort == LAMBDA):
+                node.parent = None
+                N = node.right
+                var = node.left.left
+                M = node.left.right
+                M = self.replaceNode(M, var, N)
+                return M
+            else:
+                print("Onjuist voor beta reduction")
+        else:
+            print("onjuist voor beta reduction")
+
+        return node
+
+
 
 vars = []
-root = Parser.Node(Token.Token(LAMBDA, "\\"))
-root.left = Parser.Node(Token.Token(VAR, "a"))
+root = Parser.Node(Token.Token(APPL, "@"))
+root.left = Parser.Node(Token.Token(LAMBDA, "\\"))
 root.right = Parser.Node(Token.Token(VAR, "a"))
+root.left.left = Parser.Node(Token.Token(VAR, "x"))
+root.left.right = Parser.Node(Token.Token(VAR, "z"))
+root.printPreOrder()
+print("-------------------------------------")
 test = reduce()
-root = test.alphaCon(root)
+root = test.betaRed(root)
 root.printPreOrder()
 print()
