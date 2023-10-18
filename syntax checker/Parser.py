@@ -26,14 +26,14 @@ class Node:
         return f'{self.type}'
 
     #pre-order
-    def PrintTree(self):
+    def printPreOrder(self):
         print(self.token.var, " ", end= "")
 
         if self.left:
-            self.left.PrintTree()
+            self.left.printPreOrder()
 
         if self.right:
-            self.right.PrintTree()
+            self.right.printPreOrder()
 
 
 
@@ -164,7 +164,7 @@ def connectFamily(node):
         node.left = connectFamily(node.left)
 
     if node.right != None:
-        node.right.parient = node
+        node.right.parent = node
         node.right = connectFamily(node.right)
 
     return node

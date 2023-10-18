@@ -24,19 +24,19 @@ class Node:
         self.parent = None
 
     def __repr__(self):
-        if self.type == VAR:
-            return f'{self.type}:{self.var}'
-        return f'{self.type}'
+        if self.token.soort == VAR:
+            return f'{self.token.soort}:{self.token.var}'
+        return f'{self.token.soort}'
 
     #pre-order
-    def PrintTree(self):
+    def printPreOrder(self):
         print(self.token.var, " ")
 
         if self.left:
-            self.left.PrintTree()
+            self.left.printPreOrder()
 
         if self.right:
-            self.right.PrintTree()
+            self.right.printPreOrder()
 
 
 def connectFamily(node):
@@ -45,21 +45,35 @@ def connectFamily(node):
         node.left = connectFamily(node.left)
 
     if node.right != None:
-        node.right.parient = node
+        node.right.parent = node
         node.right = connectFamily(node.right)
 
     return node
         
 
 
-root = Node(Token(APPL, "@"))
-root.left = Node(Token(VAR, "iets"))
-root = connectFamily(root)
+root = Node(Token(APPL, '@'))
+root.left = Node(Token(VAR, "eerste"))
+root.right = Node(Token(LAMBDA, "\\"))
+root.right.left = Node(Token(VAR, "tweede"))
+root.right.right = Node(Token(VAR, "laatste"))
 
-
-
-root.left.PrintTree()
+root.printPreOrder()
+print("---------------------")
+root.left.printPreOrder()
 print("-------------------")
-root.left.parent.PrintTree()
-print("--------------")
-root.PrintTree()
+root.right.printPreOrder()
+print("-------------------")
+
+
+root = connectFamily(root)
+root.left.parent.printPreOrder()
+print("-------------------")
+root.right.parent.printPreOrder()
+print("-------------------")
+print(root.right.parent)
+print(root.left.parent)
+
+
+
+
