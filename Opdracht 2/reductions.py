@@ -12,8 +12,20 @@ EMPTY = 'EMPTY'
 
 class reduce:
     def __init__(self, root):
-        self.max = 1000
+        self.max = 2
+        self.current = 0
         self.root = root
+
+    def run(self):
+        reduced = self.seekBeta(self.root)
+        print(self.current)
+        if(self.current >= self.max):
+            print(f"Meer dan {self.max} Beta reductions uitgevoerd, expressie reduceren wordt gestopt.")
+            print("Uiteindelijke expressie: ")
+        self.current = 0
+        reduced.stringTeruggeven()
+        print()
+        return reduced
 
     def makeVar(self, vars):
         for i in range(len(string.ascii_letters)):
@@ -21,35 +33,42 @@ class reduce:
                 return string.ascii_letters[i]
             
     def collectVars(self, node, vars):
-        if(node.token.soort == VAR):
+        if(self.current > self.max):
+            return node
+        elif(node.token.soort == VAR):
             if(node.token.var not in vars):
                 vars.append(node.token.var)
         else:
             self.collectVars(node.left, vars)
             self.collectVars(node.right, vars)
-
-    def changeVars(self, node, oldVar, nwVar):
-        if(node.token.soort == VAR):
-            if(node.token.var == oldVar):
-                node.token.var = nwVar
-        else:
-            node.left = self.changeVars(node.left, oldVar, nwVar)
-            node.left = self.changeVars(node.right, oldVar, nwVar)
-        return node
     
-
-    #krijgt de node met de Lambda in
-    def alphaCon(self, node):
-        if(node.token.soort == LAMBDA):
-            vars = []
-            self.collectVars(node, vars)
-            nwVar = self.makeVar(vars)
-            node = self.changeVars(node, node.left.token.var, nwVar)
-            node = Parser.connectFamily(node)
+    #LET OP vergeet niet var buiten alphacon te veranderen
+    #krijgt de node met de expr van de lambda in
+    def alphaCon(self, node, oldVars, subVars, Nvars):
+        if(self.current > self.max):
             return node
-        else:
-            print("ERROR: geen lambda in de node")
-            exit(0)
+        elif(node.token.soort == VAR):
+            for i in range(len(oldVars)-1, -1, -1):
+                if (oldVars[i] == node.token.var):
+                    node.token.var = subVars[i]
+                    return node
+        elif(node.token.soort == LAMBDA):
+            if(node.left.token.var in Nvars):
+                oldVars.append(node.left.token.var)
+                vars = Nvars + subVars
+                self.collectVars(node.right,vars)
+                new = self.makeVar(vars)
+                subVars.append(new)
+                node.left.token.var = new
+                node.right = self.alphaCon(node.right, oldVars, subVars, Nvars)
+                return node
+        if(node.left != None):    
+            node.left = self.alphaCon(node.left, oldVars, subVars, Nvars)
+        if(node.right != None):
+            node.right = self.alphaCon(node.right, oldVars, subVars, Nvars)
+        return node
+
+
 
     def replaceNode(self, node, old, new):
         if(node.token.soort == VAR):
@@ -69,10 +88,24 @@ class reduce:
                 #kijkt naar de vars in N, let op
                 Nvars = []
                 self.collectVars(N, Nvars)
+                oldVars =[]
+                newVars = []
+                node.left = self.alphaCon(node.left, oldVars, newVars, Nvars)
                 var = node.left.left.token.var
-                if(var in Nvars):
-                    var = self.makeVar()
                 M = node.left.right
+                M = self.replaceNode(M, var, N)
+                return M
+            elif (node.right.token.soort == LAMBDA):
+                node.parent = None
+                N = node.left
+                #kijkt naar de vars in N, let op
+                Nvars = []
+                self.collectVars(N, Nvars)
+                oldVars =[]
+                newVars = []
+                node.right = self.alphaCon(node.right, oldVars, newVars, Nvars)
+                var = node.right.left.token.var
+                M = node.right.right
                 M = self.replaceNode(M, var, N)
                 return M
             else:
@@ -82,27 +115,22 @@ class reduce:
 
         return node
 
+    def seekBeta(self, node):
+        if (self.current > self.max):
+            return node
+        elif (node.token.soort == APPL):
+            if(node.left.token.soort == LAMBDA or node.right.token.soort == LAMBDA):
+                node = self.betaRed(node)
+                self.current += 1
+                if(self.current <= self.max):
+                    node = self.seekBeta(node)
+                return node
+        
+        if(node.left != None):
+            node.left = self.seekBeta(node.left)
+        if(node.right != None):
+            node.right = self.seekBeta(node.right)
+
+        return node            
 
 
-vars = []
-root = Parser.Node(Token.Token(APPL, "@"))
-
-root.left = Parser.Node(Token.Token(LAMBDA, "\\"))
-root.right = Parser.Node(Token.Token(APPL, "@"))
-
-root.right.left = Parser.Node(Token.Token(VAR, "kam aan"))
-root.right.right = Parser.Node(Token.Token(VAR, "je bent er bijna"))
-
-root.left.left = Parser.Node(Token.Token(VAR, "x"))
-root.left.right = Parser.Node(Token.Token(APPL, "@"))
-
-root.left.right.left = Parser.Node(Token.Token(VAR, "x"))
-root.left.right.right = Parser.Node(Token.Token(VAR, "x"))
-
-root.printPreOrder()
-print()
-print("-------------------------------------")
-test = reduce(root)
-root = test.betaRed(root)
-root.printPreOrder()
-print()
