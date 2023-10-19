@@ -54,6 +54,3 @@ def verwerk(invoer):
     tokens.append(Token(END, "END"))
 
     return tokens
-
-
-   
