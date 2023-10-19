@@ -106,8 +106,5 @@ def collectVars(node, vars):
 lijst = ["a", "b", "c"]
 
 for i in range(len(lijst)-1,-1,-1):
-<<<<<<< HEAD
-    print(lijst[i])
-=======
-    print(lijst[i])
->>>>>>> b37ea6d1d9e910da6df09cbd1258f31fab7267b7
+    lijst[i]
+
