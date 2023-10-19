@@ -20,14 +20,8 @@ with open(file) as f:
 verwerkt = Token.verwerk(invoer)
 geparset = Parser.Pars(verwerkt)
 root = geparset.parse()
-root.printPreOrder()
-print()
-print("----------------------------------")
-reduction = reductions.reduce(root)
-test = reduction.betaRed(root)
-test.printPreOrder()
-print()
-
+reduceThis = reductions.reduce(root)
+reduced = reduceThis.run()
 
 
 

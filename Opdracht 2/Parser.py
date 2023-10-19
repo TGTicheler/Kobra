@@ -34,6 +34,27 @@ class Node:
 
         if self.right:
             self.right.printPreOrder()
+    
+
+    def stringTeruggeven(self):
+        if(self.token.soort == VAR):
+            print(self.token.var, end="")
+            return
+
+        print("(", end="")
+
+        if (self.token.soort == LAMBDA):
+            print(f"{self.token.var}", end="")
+            self.left.stringTeruggeven()
+            print(" ", end="")
+            self.right.stringTeruggeven()
+        elif (self.token.soort == APPL):
+            self.left.stringTeruggeven()
+            print(" ", end="")
+            self.right.stringTeruggeven()
+
+        print(")", end="")
+
 
 
 
@@ -54,29 +75,9 @@ class Pars:
     def parse(self):
         juist, self.root = self.expr()
         self.root = connectFamily(self.root)
-        self.stringTeruggeven(self.root)
+        self.root.stringTeruggeven()
         print()
         return self.root
-
-    
-    def stringTeruggeven(self, node):
-        if(node.token.soort == VAR):
-            print(node.token.var, end="")
-            return
-
-        print("(", end="")
-
-        if (node.token.soort == LAMBDA):
-            print(f"{node.token.var}", end="")
-            self.stringTeruggeven(node.left)
-            print(" ", end="")
-            self.stringTeruggeven(node.right)
-        elif (node.token.soort == APPL):
-            self.stringTeruggeven(node.left)
-            print(" ", end="")
-            self.stringTeruggeven(node.right)
-
-        print(")", end="")
 
 
         
@@ -159,11 +160,11 @@ class Pars:
         return True, node
     
 def connectFamily(node):
-    if node.left != None:
+    if (node.left != None):
         node.left.parent = node
         node.left = connectFamily(node.left)
 
-    if node.right != None:
+    if (node.right != None):
         node.right.parent = node
         node.right = connectFamily(node.right)
 
