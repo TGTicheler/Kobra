@@ -1,1 +1,26 @@
-\x\y\x x y
+(\x (x x))(\x (x x))
+
+(\x x x)(\x x x)
+
+(\x y)((\x (x x))(\x (x x)))
+
+(\x \y x)(\z y)
+
+(x y)
+
+\x\y(x\z y)
+
+(\x x)(\y y)
+
+(\ u ( \ w( w (\ w( w u))))) (w z)
+
+(\ u ( \ w ( \ w ( \ w(w u))))) (w z)
+
+(\ u ( \ w ( \ w (w u)))) (w z)
+
+(\ u ( \ w (w u))) (w z)
+
+(\ y x) y
+
+leest alleen de bovenste regel
+de regels eronder zijn voorbeelden om te gebruiken
