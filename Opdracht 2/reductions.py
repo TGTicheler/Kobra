@@ -12,13 +12,12 @@ EMPTY = 'EMPTY'
 
 class reduce:
     def __init__(self, root):
-        self.max = 2
+        self.max = 1000
         self.current = 0
         self.root = root
 
     def run(self):
         reduced = self.seekBeta(self.root)
-        print(self.current)
         if(self.current >= self.max):
             print(f"Meer dan {self.max} Beta reductions uitgevoerd, expressie reduceren wordt gestopt.")
             print("Uiteindelijke expressie: ")
