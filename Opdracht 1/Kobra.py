@@ -9,14 +9,13 @@
 # Laura Faas s3443159
 # Concepts of Programming Languages, 2023
 
-
-import Token as Token
+import Token
 import Parser
 
 # leest vanuit de command line in
-invoer = input('---< ')
+invoer = input('Voer een expressie in:\t')
 verwerkt = Token.verwerk(invoer)
 geparset = Parser.Pars(verwerkt)
 root = geparset.parse()
 
-exit(1)
+exit(0)

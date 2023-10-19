@@ -85,8 +85,8 @@ class Pars:
     def pExpr(self):
         tok = self.current_tok
         if(self.lhaakjes == 0 and tok.soort == RHAAK):
-            print('ERROR een rhaakje zonder lhaakje---------')
-            exit(0)
+            print(f"Syntax error: right bracket found without an opening left bracket.")
+            exit(1)
         elif(tok.soort == VAR):
             return True, Node(Token.Token(VAR, tok.var))
         elif(tok.soort == LHAAK):
@@ -98,11 +98,11 @@ class Pars:
                     self.lhaakjes -= 1
                     return True, node
                 else:
-                    print('ERROR geen Rhaakje --------------')
-                    exit(0)
+                    print(f"Syntax error: right bracket not found after an opening left bracket.")
+                    exit(1)
             else:
-                print('ERROR geen expressie in ( )---------------')
-                exit(0)
+                print(f"Syntax error: no expression found between two brackets.")
+                exit(1)
 
         return False, Node(Token.Token(EMPTY, "EMPTY"))
         
@@ -122,12 +122,12 @@ class Pars:
                 node.left = Node(Token.Token(VAR, tok.var))
                 juist, node.right = self.lExpr()
                 if(juist == False):
-                    print('ERROR mist lExpr-------------')
-                    exit(0)
+                    print(f"Syntax error: left expresssion not found.")
+                    exit(1)
                 return True, node
             else:
-                print('ERROR geen variabele bij Lambda-----------------')
-                exit(0)
+                print(f"Syntax error: no variable found after \\")
+                exit(1)
         
         return False, Node(Token.Token(EMPTY, "EMPTY"))
     
@@ -147,8 +147,8 @@ class Pars:
     def expr(self):
         juist, left = self.lExpr()
         if (juist == False):
-            print("Onjuiste invoer")
-            exit(0)
+            print(f"Syntax error: wrong input.")
+            exit(1)
         nietLeeg, right = self.dashExpr()
         if(nietLeeg == True):
             node = Node(Token.Token(APPL, "@"))

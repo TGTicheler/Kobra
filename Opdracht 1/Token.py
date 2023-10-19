@@ -42,7 +42,7 @@ def verwerk(invoer):
             tokens.append(Token(LHAAK, "("))
         elif invoer[i] == ')':
             tokens.append(Token(RHAAK, ")"))
-        elif invoer[i] == '\\':
+        elif invoer[i] == '\\' or invoer[i] == 'λ':
             tokens.append(Token(LAMBDA, "\\"))
         elif invoer[i] in string.ascii_letters:
             var = ''
@@ -51,11 +51,11 @@ def verwerk(invoer):
                 i += 1
                 if(i >= grootte):
                     break
-            i-=1
+            i -= 1
             tokens.append(Token(VAR, var))
         else:
-            print(f"Onjuiste invoer")
-            exit(0)
+            print(f"Syntax error: wrong input.")
+            exit(1)
         i += 1
 
     tokens.append(Token(END, "END"))
