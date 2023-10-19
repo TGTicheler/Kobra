@@ -20,5 +20,9 @@ with open(file) as f:
 verwerkt = Token.verwerk(invoer)
 geparset = Parser.Pars(verwerkt)
 root = geparset.parse()
+reduceThis = reductions.reduce(root)
+reduced = reduceThis.run()
+
+
 
 exit(1)
