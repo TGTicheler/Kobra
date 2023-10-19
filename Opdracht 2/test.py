@@ -73,15 +73,15 @@ def collectVars(node, vars):
             collectVars(node.right, vars)
 
 
-root = Node(Token(APPL, '@'))
-root.left = Node(Token(VAR, "eerste"))
-root.right = Node(Token(LAMBDA, "\\"))
-root.right.left = Node(Token(VAR, "tweede"))
-root.right.right = Node(Token(VAR, "laatste"))
-root.printPreOrder()
-root.left.token.var = "verandert lets go"
-print("-----------------")
-root.printPreOrder()
+# root = Node(Token(APPL, '@'))
+# root.left = Node(Token(VAR, "eerste"))
+# root.right = Node(Token(LAMBDA, "\\"))
+# root.right.left = Node(Token(VAR, "tweede"))
+# root.right.right = Node(Token(VAR, "laatste"))
+# root.printPreOrder()
+# root.left.token.var = "verandert lets go"
+# print("-----------------")
+# root.printPreOrder()
 
 # root.printPreOrder()
 # print("---------------------")
@@ -103,3 +103,7 @@ root.printPreOrder()
 
 # collectVars(root, vars)
 # print(vars)
+lijst = ["a", "b", "c"]
+
+for i in range(len(lijst)-1,-1,-1):
+    print(lijst[i])

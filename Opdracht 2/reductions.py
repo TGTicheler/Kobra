@@ -37,19 +37,31 @@ class reduce:
             node.left = self.changeVars(node.right, oldVar, nwVar)
         return node
     
+    #LET OP vergeet niet var buiten alphacon te veranderen
+    #krijgt de node met de expr van de lambda in
+    def alphaCon(self, node, oldVars, subVars, Nvars):
+        if(node.token.soort == VAR):
+            for i in range(len(oldVars)-1, -1, -1):
+                if (oldVars[i] == node.token.var):
+                    node.token.var = subVars[i]
+                    return node
+        elif(node.token.soort == LAMBDA):
+            if(node.left.token.var in Nvars):
+                oldVars.append(node.left.token.var)
+                vars = Nvars + subVars
+                self.collectVars(node.right,vars)
+                new = self.makeVar(vars)
+                subVars.append(new)
+                node.left.token.var = new
+                node.right = self.alphaCon(node.right, oldVars, subVars, Nvars)
+                return node
+        if(node.left != None):    
+            node.left = self.alphaCon(node.left, oldVars, subVars, Nvars)
+        if(node.right != None):
+            node.right = self.alphaCon(node.right, oldVars, subVars, Nvars)
+        return node
 
-    #krijgt de node met de Lambda in
-    def alphaCon(self, node):
-        if(node.token.soort == LAMBDA):
-            vars = []
-            self.collectVars(node, vars)
-            nwVar = self.makeVar(vars)
-            node = self.changeVars(node, node.left.token.var, nwVar)
-            node = Parser.connectFamily(node)
-            return node
-        else:
-            print("ERROR: geen lambda in de node")
-            exit(0)
+
 
     def replaceNode(self, node, old, new):
         if(node.token.soort == VAR):
@@ -69,9 +81,10 @@ class reduce:
                 #kijkt naar de vars in N, let op
                 Nvars = []
                 self.collectVars(N, Nvars)
+                oldVars =[]
+                newVars = []
+                node.left = self.alphaCon(node.left, oldVars, newVars, Nvars)
                 var = node.left.left.token.var
-                if(var in Nvars):
-                    var = self.makeVar()
                 M = node.left.right
                 M = self.replaceNode(M, var, N)
                 return M
@@ -84,25 +97,25 @@ class reduce:
 
 
 
-vars = []
-root = Parser.Node(Token.Token(APPL, "@"))
+# vars = []
+# root = Parser.Node(Token.Token(APPL, "@"))
 
-root.left = Parser.Node(Token.Token(LAMBDA, "\\"))
-root.right = Parser.Node(Token.Token(APPL, "@"))
+# root.left = Parser.Node(Token.Token(LAMBDA, "\\"))
+# root.right = Parser.Node(Token.Token(APPL, "@"))
 
-root.right.left = Parser.Node(Token.Token(VAR, "kam aan"))
-root.right.right = Parser.Node(Token.Token(VAR, "je bent er bijna"))
+# root.right.left = Parser.Node(Token.Token(VAR, "kam aan"))
+# root.right.right = Parser.Node(Token.Token(VAR, "je bent er bijna"))
 
-root.left.left = Parser.Node(Token.Token(VAR, "x"))
-root.left.right = Parser.Node(Token.Token(APPL, "@"))
+# root.left.left = Parser.Node(Token.Token(VAR, "x"))
+# root.left.right = Parser.Node(Token.Token(APPL, "@"))
 
-root.left.right.left = Parser.Node(Token.Token(VAR, "x"))
-root.left.right.right = Parser.Node(Token.Token(VAR, "x"))
+# root.left.right.left = Parser.Node(Token.Token(VAR, "x"))
+# root.left.right.right = Parser.Node(Token.Token(VAR, "x"))
 
-root.printPreOrder()
-print()
-print("-------------------------------------")
-test = reduce(root)
-root = test.betaRed(root)
-root.printPreOrder()
-print()
+# root.printPreOrder()
+# print()
+# print("-------------------------------------")
+# test = reduce(root)
+# root = test.betaRed(root)
+# root.printPreOrder()
+# print()
