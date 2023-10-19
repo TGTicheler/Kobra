@@ -1,9 +1,9 @@
 # Paul Tielens s3612031 ...
 # Concepts of Programming Languages, 2023
 
-# Parses an array of tokens of lambda calculus and makes a binary tree
+# takes in a string and produces an array of tokens from the string
 
-import Token
+import string
 
 LHAAK = 'L-HAAKJE'
 RHAAK = 'R-HAAKJE'
@@ -13,159 +13,47 @@ APPL = 'APPLICATION'
 END = 'END'
 EMPTY = 'EMPTY'
 
-class Node:
-    def __init__(self, token):
-        self.left = None
-        self.right = None
-        self.token = token
-        self.parent = None
+class Token:
+    def __init__(self, soort, var):
+        self.soort = soort
+        self.var = var
 
     def __repr__(self):
-        if self.type == VAR:
-            return f'{self.type}:{self.var}'
-        return f'{self.type}'
-
-    #pre-order
-    def printPreOrder(self):
-        print(self.token.var, " ", end= "")
-
-        if self.left:
-            self.left.printPreOrder()
-
-        if self.right:
-            self.right.printPreOrder()
+        if self.soort == VAR:
+            return f'{self.soort}:{self.var}'
+        return f'{self.soort}'
     
 
-    def stringTeruggeven(self):
-        if(self.token.soort == VAR):
-            print(self.token.var, end="")
-            return
-
-        print("(", end="")
-
-        if (self.token.soort == LAMBDA):
-            print(f"{self.token.var}", end="")
-            self.left.stringTeruggeven()
-            print(" ", end="")
-            self.right.stringTeruggeven()
-        elif (self.token.soort == APPL):
-            self.left.stringTeruggeven()
-            print(" ", end="")
-            self.right.stringTeruggeven()
-
-        print(")", end="")
-
-
-
-
-class Pars:
-    def __init__(self, tokens):
-        self.tokens = tokens
-        self.tok_idx = -1
-        self.lhaakjes = 0
-        self.root = None
-
-
-    def advance(self):
-        self.tok_idx += 1
-        if self.tok_idx < len(self.tokens):
-            self.current_tok = self.tokens[self.tok_idx]
-        return self.current_tok
-
-    def parse(self):
-        juist, self.root = self.expr()
-        self.root = connectFamily(self.root)
-        self.root.stringTeruggeven()
-        print()
-        return self.root
-
-
-        
-
-
-    def pExpr(self):
-        tok = self.current_tok
-        if(self.lhaakjes == 0 and tok.soort == RHAAK):
-            print('ERROR een rhaakje zonder lhaakje---------')
-            exit(0)
-        elif(tok.soort == VAR):
-            return True, Node(Token.Token(VAR, tok.var))
-        elif(tok.soort == LHAAK):
-            self.lhaakjes += 1
-            juist, node = self.expr()
-            if(juist == True):
-                tok = self.current_tok
-                if(tok.soort == RHAAK):
-                    self.lhaakjes -= 1
-                    return True, node
-                else:
-                    print('ERROR geen Rhaakje --------------')
-                    exit(0)
-            else:
-                print('ERROR geen expressie in ( )---------------')
-                exit(0)
-
-        return False, Node(Token.Token(EMPTY, "EMPTY"))
-        
-    def lExpr(self):
-        self.advance()
-        tok = self.current_tok
-        juist, node = self.pExpr()
-        if(self.lhaakjes == 0 and tok.soort == RHAAK):
-            exit(0)
-        elif(juist == True):
-            return True, node
-        elif(tok.soort == LAMBDA):
-            self.advance()
-            node = Node(Token.Token(LAMBDA, "\\"))
-            tok = self.current_tok
-            if(tok.soort == VAR):
-                node.left = Node(Token.Token(VAR, tok.var))
-                juist, node.right = self.lExpr()
-                if(juist == False):
-                    print('ERROR mist lExpr-------------')
-                    exit(0)
-                return True, node
-            else:
-                print('ERROR geen variabele bij Lambda-----------------')
-                exit(0)
-        
-        return False, Node(Token.Token(EMPTY, "EMPTY"))
-    
-    def dashExpr(self):
-        juist, left = self.lExpr()
-        if(juist == True):
-            nietLeeg, right = self.dashExpr()
-            if(nietLeeg == True):
-                node = Node(Token.Token(APPL, "@"))
-                node.left = left
-                node.right = right
-            else:
-                node = left
-            return True, node
-        return False, Node(Token.Token(EMPTY, "EMPTY"))
-
-    def expr(self):
-        juist, left = self.lExpr()
-        if (juist == False):
-            print("Onjuiste invoer")
-            exit(0)
-        nietLeeg, right = self.dashExpr()
-        if(nietLeeg == True):
-            node = Node(Token.Token(APPL, "@"))
-            node.left = left
-            node.right = right
+def verwerk(invoer):
+    tokens = []
+    grootte = len(invoer)
+    i = 0
+    while i < grootte:
+        if invoer[i] == ' ' or invoer[i] == '\n' or invoer[i] == '\r':
+            pass
+        elif invoer[i] == '(':
+            tokens.append(Token(LHAAK, "("))
+        elif invoer[i] == ')':
+            tokens.append(Token(RHAAK, ")"))
+        elif invoer[i] == '\\':
+            tokens.append(Token(LAMBDA, "\\"))
+        elif invoer[i] in string.ascii_letters:
+            var = ''
+            while(invoer[i] in string.ascii_letters or invoer[i].isnumeric()):
+                var = var + invoer[i]
+                i += 1
+                if(i >= grootte):
+                    break
+            i-=1
+            tokens.append(Token(VAR, var))
         else:
-            node = left
-        return True, node
-    
-def connectFamily(node):
-    if (node.left != None):
-        node.left.parent = node
-        node.left = connectFamily(node.left)
+            print(f"Onjuiste invoer")
+            exit(0)
+        i += 1
 
-    if (node.right != None):
-        node.right.parent = node
-        node.right = connectFamily(node.right)
+    tokens.append(Token(END, "END"))
 
-    return node
+    return tokens
+
+
+   
