@@ -13,11 +13,11 @@ This program works correctly, there aren't any known defects.
 There aren't any deviations from the assignment. 
 
 All the sentences with 'must' and 'should' are implemented.
-The followwing sentences with 'may' are not implemented
-  The explanation about the format
-  The zip files with positive and negative examples
-  Every sentence with specifications about dot
-  The output may use the least amount of whitespace and parenthese in its output
+The followwing sentences with 'may' are not implemented:
+- The explanation about the format
+- The zip files with positive and negative examples
+- Every sentence with specifications about dot
+- The output may use the least amount of whitespace and parenthese in its output
   
 Explanantion (MAY):
 In token.py is a function that takes in a string of an equation of lambda calculus and makes an array of tokens based on this string.
