@@ -13,7 +13,7 @@ This program works correctly, there aren't any known defects.
 There aren't any deviations from the assignment. 
 
 All the sentences with 'must' and 'should' are implemented.
-The followwing sentences with 'may' are not implemented:
+The following sentences with 'may' are not implemented:
 - The explanation about the format
 - The zip files with positive and negative examples
 - Every sentence with specifications about dot
