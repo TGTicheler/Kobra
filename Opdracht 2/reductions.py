@@ -32,8 +32,8 @@ class reduce:
                 return string.ascii_letters[i]
             
     def collectVars(self, node, vars):
-        if(self.current > self.max):
-            return node
+        if(self.current > self.max ):
+            return
         elif(node.token.soort == VAR):
             if(node.token.var not in vars):
                 vars.append(node.token.var)
@@ -41,10 +41,8 @@ class reduce:
             self.collectVars(node.left, vars)
             self.collectVars(node.right, vars)
     
-    #LET OP vergeet niet var buiten alphacon te veranderen
-    #krijgt de node met de expr van de lambda in
     def alphaCon(self, node, oldVars, subVars, Nvars):
-        if(self.current > self.max):
+        if(self.current > self.max ):
             return node
         elif(node.token.soort == VAR):
             for i in range(len(oldVars)-1, -1, -1):
@@ -70,7 +68,9 @@ class reduce:
 
 
     def replaceNode(self, node, old, new):
-        if(node.token.soort == VAR):
+        if(self.current > self.max  ):
+            return node
+        elif(node.token.soort == VAR):
             if(node.token.var == old):
                 node = new
         else:
@@ -80,11 +80,12 @@ class reduce:
         return node
 
     def betaRed(self, node):
-        if(node.token.soort == APPL):
+        if(self.current > self.max  ):
+            return node
+        elif(node.token.soort == APPL):
             if(node.left.token.soort == LAMBDA):
                 node.parent = None
                 N = node.right
-                #kijkt naar de vars in N, let op
                 Nvars = []
                 self.collectVars(N, Nvars)
                 oldVars =[]
@@ -97,7 +98,6 @@ class reduce:
             elif (node.right.token.soort == LAMBDA):
                 node.parent = None
                 N = node.left
-                #kijkt naar de vars in N, let op
                 Nvars = []
                 self.collectVars(N, Nvars)
                 oldVars =[]
@@ -115,12 +115,12 @@ class reduce:
         return node
 
     def seekBeta(self, node):
-        if (self.current > self.max):
+        if (self.current > self.max ):
             return node
         elif (node.token.soort == APPL):
             if(node.left.token.soort == LAMBDA or node.right.token.soort == LAMBDA):
-                node = self.betaRed(node)
                 self.current += 1
+                node = self.betaRed(node)
                 if(self.current <= self.max):
                     node = self.seekBeta(node)
                 return node
