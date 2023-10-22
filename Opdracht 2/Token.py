@@ -16,14 +16,14 @@ END = 'END'
 EMPTY = 'EMPTY'
 
 class Token:
-    def __init__(self, soort, var):
-        self.soort = soort
+    def __init__(self, type, var):
+        self.type = type
         self.var = var
 
     def __repr__(self):
-        if self.soort == VAR:
-            return f'{self.soort}:{self.var}'
-        return f'{self.soort}'
+        if self.type == VAR:
+            return f'{self.type}:{self.var}'
+        return f'{self.type}'
     
 
 def verwerk(invoer):
