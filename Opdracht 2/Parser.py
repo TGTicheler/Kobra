@@ -1,4 +1,6 @@
-# Paul Tielens s3612031 ...
+# Paul Tielens s3612031
+# Thom Ticheler s3696820
+# Laura Faas s3443159
 # Concepts of Programming Languages, 2023
 
 # Parses an array of tokens of lambda calculus and makes a binary tree

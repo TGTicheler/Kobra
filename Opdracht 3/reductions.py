@@ -1,3 +1,8 @@
+# Paul Tielens s3612031
+# Thom Ticheler s3696820
+# Laura Faas s3443159
+# Concepts of Programming Languages, 2023
+
 import Token
 import Parser
 import string
