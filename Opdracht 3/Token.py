@@ -41,17 +41,27 @@ def verwerk(invoer):
             tokens.append(Token(LHAAK, "("))
         elif invoer[i] == ')':
             tokens.append(Token(RHAAK, ")"))
-        elif invoer[i] == '\\':
-            tokens.append(Token(LAMBDA, "\\") or invoer[i] == 'λ')
+        elif invoer[i] == '\\'  or invoer[i] == 'λ':
+            tokens.append(Token(LAMBDA, "\\"))
+        elif invoer [i] == ':':
+            tokens.append(Token(COLON, ":"))
         elif invoer[i] in string.ascii_letters:
             var = ''
+            if (invoer[i] in string.ascii_uppercase):
+                Upper = True
+            else:
+                Upper = False
+
             while(invoer[i] in string.ascii_letters or invoer[i].isnumeric()):
                 var = var + invoer[i]
                 i += 1
                 if(i >= grootte):
                     break
             i-=1
-            tokens.append(Token(VAR, var))
+            if (Upper == True):
+                tokens.append(Token(UVAR, var))
+            else:
+                tokens.append(Token(LVAR, var))
         else:
             print(f"Onjuiste invoer")
             exit(0)

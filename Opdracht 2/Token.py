@@ -37,8 +37,8 @@ def verwerk(invoer):
             tokens.append(Token(LHAAK, "("))
         elif invoer[i] == ')':
             tokens.append(Token(RHAAK, ")"))
-        elif invoer[i] == '\\':
-            tokens.append(Token(LAMBDA, "\\") or invoer[i] == 'λ')
+        elif invoer[i] == '\\' or invoer[i] == 'λ':
+            tokens.append(Token(LAMBDA, "\\"))
         elif invoer[i] in string.ascii_letters:
             var = ''
             while(invoer[i] in string.ascii_letters or invoer[i].isnumeric()):
