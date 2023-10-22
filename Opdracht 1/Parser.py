@@ -13,14 +13,6 @@
 
 import Token
 
-LHAAK = 'L-HAAKJE'
-RHAAK = 'R-HAAKJE'
-LAMBDA = 'LAMBDA'
-VAR = 'VARIABELE'
-APPL = 'APPLICATION'
-END = 'END'
-EMPTY = 'EMPTY'
-
 class Node:
     def __init__(self, token):
         self.left = None
@@ -29,7 +21,7 @@ class Node:
         self.parent = None
 
     def __repr__(self):
-        if self.type == VAR:
+        if self.type == Token.VAR:
             return f'{self.type}:{self.var}'
         return f'{self.type}'
 
@@ -64,18 +56,18 @@ class Pars:
         return self.root
 
     def stringTeruggeven(self, node):
-        if(node.token.soort == VAR):
+        if(node.token.soort == Token.VAR):
             print(node.token.var, end="")
             return
 
         print("(", end="")
 
-        if (node.token.soort == LAMBDA):
+        if (node.token.soort == Token.LAMBDA):
             print(f"{node.token.var}", end="")
             self.stringTeruggeven(node.left)
             print(" ", end="")
             self.stringTeruggeven(node.right)
-        elif (node.token.soort == APPL):
+        elif (node.token.soort ==Token.APPL):
             self.stringTeruggeven(node.left)
             print(" ", end="")
             self.stringTeruggeven(node.right)
@@ -84,17 +76,17 @@ class Pars:
         
     def pExpr(self):
         tok = self.current_tok
-        if(self.lhaakjes == 0 and tok.soort == RHAAK):
+        if(self.lhaakjes == 0 and tok.soort == Token.RHAAK):
             print(f"Syntax error: right bracket found without an opening left bracket.")
             exit(1)
-        elif(tok.soort == VAR):
-            return True, Node(Token.Token(VAR, tok.var))
-        elif(tok.soort == LHAAK):
+        elif(tok.soort == Token.VAR):
+            return True, Node(Token.Token(Token.VAR, tok.var))
+        elif(tok.soort == Token.LHAAK):
             self.lhaakjes += 1
             juist, node = self.expr()
             if(juist == True):
                 tok = self.current_tok
-                if(tok.soort == RHAAK):
+                if(tok.soort == Token.RHAAK):
                     self.lhaakjes -= 1
                     return True, node
                 else:
@@ -104,22 +96,22 @@ class Pars:
                 print(f"Syntax error: no expression found between two brackets.")
                 exit(1)
 
-        return False, Node(Token.Token(EMPTY, "EMPTY"))
+        return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
         
     def lExpr(self):
         self.advance()
         tok = self.current_tok
         juist, node = self.pExpr()
-        if(self.lhaakjes == 0 and tok.soort == RHAAK):
+        if(self.lhaakjes == 0 and tok.soort == Token.RHAAK):
             exit(0)
         elif(juist == True):
             return True, node
-        elif(tok.soort == LAMBDA):
+        elif(tok.soort == Token.LAMBDA):
             self.advance()
-            node = Node(Token.Token(LAMBDA, "\\"))
+            node = Node(Token.Token(Token.LAMBDA, "\\"))
             tok = self.current_tok
-            if(tok.soort == VAR):
-                node.left = Node(Token.Token(VAR, tok.var))
+            if(tok.soort == Token.VAR):
+                node.left = Node(Token.Token(Token.VAR, tok.var))
                 juist, node.right = self.lExpr()
                 if(juist == False):
                     print(f"Syntax error: left expresssion not found.")
@@ -129,20 +121,20 @@ class Pars:
                 print(f"Syntax error: no variable found after \\")
                 exit(1)
         
-        return False, Node(Token.Token(EMPTY, "EMPTY"))
+        return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
     
     def dashExpr(self):
         juist, left = self.lExpr()
         if(juist == True):
             nietLeeg, right = self.dashExpr()
             if(nietLeeg == True):
-                node = Node(Token.Token(APPL, "@"))
+                node = Node(Token.Token(Token.APPL, "@"))
                 node.left = left
                 node.right = right
             else:
                 node = left
             return True, node
-        return False, Node(Token.Token(EMPTY, "EMPTY"))
+        return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
 
     def expr(self):
         juist, left = self.lExpr()
@@ -151,7 +143,7 @@ class Pars:
             exit(1)
         nietLeeg, right = self.dashExpr()
         if(nietLeeg == True):
-            node = Node(Token.Token(APPL, "@"))
+            node = Node(Token.Token(Token.APPL, "@"))
             node.left = left
             node.right = right
         else:
