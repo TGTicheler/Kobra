@@ -31,7 +31,7 @@ class reduce:
     def collectVars(self, node, vars):
         if(self.current > self.max ):
             return
-        elif(node.token.soort == Token.VAR):
+        elif(node.token.type== Token.VAR):
             if(node.token.var not in vars):
                 vars.append(node.token.var)
         else:
@@ -41,12 +41,12 @@ class reduce:
     def alphaCon(self, node, oldVars, subVars, Nvars):
         if(self.current > self.max ):
             return node
-        elif(node.token.soort == Token.VAR):
+        elif(node.token.type== Token.VAR):
             for i in range(len(oldVars)-1, -1, -1):
                 if (oldVars[i] == node.token.var):
                     node.token.var = subVars[i]
                     return node
-        elif(node.token.soort == Token.LAMBDA):
+        elif(node.token.type== Token.LAMBDA):
             if(node.left.token.var in Nvars):
                 oldVars.append(node.left.token.var)
                 vars = Nvars + subVars
@@ -67,7 +67,7 @@ class reduce:
     def replaceNode(self, node, old, new):
         if(self.current > self.max  ):
             return node
-        elif(node.token.soort == Token.VAR):
+        elif(node.token.type== Token.VAR):
             if(node.token.var == old):
                 node = new
         else:
@@ -79,8 +79,8 @@ class reduce:
     def betaRed(self, node):
         if(self.current > self.max  ):
             return node
-        elif(node.token.soort == Token.APPL):
-            if(node.left.token.soort == Token.LAMBDA):
+        elif(node.token.type== Token.APPL):
+            if(node.left.token.type== Token.LAMBDA):
                 node.parent = None
                 N = node.right
                 Nvars = []
@@ -92,7 +92,7 @@ class reduce:
                 M = node.left.right
                 M = self.replaceNode(M, var, N)
                 return M
-            elif (node.right.token.soort == Token.LAMBDA):
+            elif (node.right.token.type== Token.LAMBDA):
                 node.parent = None
                 N = node.left
                 Nvars = []
@@ -114,8 +114,8 @@ class reduce:
     def seekBeta(self, node):
         if (self.current > self.max ):
             return node
-        elif (node.token.soort == Token.APPL):
-            if(node.left.token.soort == Token.LAMBDA or node.right.token.soort == Token.LAMBDA):
+        elif (node.token.type== Token.APPL):
+            if(node.left.token.type== Token.LAMBDA or node.right.token.type== Token.LAMBDA):
                 self.current += 1
                 node = self.betaRed(node)
                 if(self.current <= self.max):

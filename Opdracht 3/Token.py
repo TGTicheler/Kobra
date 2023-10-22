@@ -10,20 +10,24 @@ import string
 LHAAK = 'L-HAAKJE'
 RHAAK = 'R-HAAKJE'
 LAMBDA = 'LAMBDA'
-VAR = 'VARIABELE'
+LVAR = 'LOWERCASE VAR'
+UVAR = 'UPPERCASE VAR'
 APPL = 'APPLICATION'
 END = 'END'
 EMPTY = 'EMPTY'
+COLON = 'COLON'
+TO = 'TO'
+CIRCUMFLEX = 'CIRCUMFLEX'
 
 class Token:
-    def __init__(self, soort, var):
-        self.soort = soort
+    def __init__(self, type, var):
+        self.type = type
         self.var = var
 
     def __repr__(self):
-        if self.soort == VAR:
-            return f'{self.soort}:{self.var}'
-        return f'{self.soort}'
+        if self.type == LVAR or self.type == UVAR:
+            return f'{self.type}:{self.var}'
+        return f'{self.type}'
     
 
 def verwerk(invoer):

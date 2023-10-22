@@ -31,18 +31,18 @@ class Node:
     
 
     def stringTeruggeven(self):
-        if(self.token.soort == Token.VAR):
+        if(self.token.type == Token.VAR):
             print(self.token.var, end="")
             return
 
         print("(", end="")
 
-        if (self.token.soort == Token.LAMBDA):
+        if (self.token.type == Token.LAMBDA):
             print(f"{self.token.var}", end="")
             self.left.stringTeruggeven()
             print(" ", end="")
             self.right.stringTeruggeven()
-        elif (self.token.soort == Token.APPL):
+        elif (self.token.type == Token.APPL):
             self.left.stringTeruggeven()
             print(" ", end="")
             self.right.stringTeruggeven()
@@ -79,17 +79,17 @@ class Pars:
 
     def pExpr(self):
         tok = self.current_tok
-        if(self.lhaakjes == 0 and tok.soort == Token.RHAAK):
+        if(self.lhaakjes == 0 and tok.type == Token.RHAAK):
             print('ERROR een rhaakje zonder lhaakje---------')
             exit(0)
-        elif(tok.soort == Token.VAR):
+        elif(tok.type == Token.VAR):
             return True, Node(Token.Token(Token.VAR, tok.var))
-        elif(tok.soort == Token.LHAAK):
+        elif(tok.type == Token.LHAAK):
             self.lhaakjes += 1
             juist, node = self.expr()
             if(juist == True):
                 tok = self.current_tok
-                if(tok.soort == Token.RHAAK):
+                if(tok.type == Token.RHAAK):
                     self.lhaakjes -= 1
                     return True, node
                 else:
@@ -105,15 +105,15 @@ class Pars:
         self.advance()
         tok = self.current_tok
         juist, node = self.pExpr()
-        if(self.lhaakjes == 0 and tok.soort == Token.RHAAK):
+        if(self.lhaakjes == 0 and tok.type == Token.RHAAK):
             exit(0)
         elif(juist == True):
             return True, node
-        elif(tok.soort == Token.LAMBDA):
+        elif(tok.type == Token.LAMBDA):
             self.advance()
             node = Node(Token.Token(Token.LAMBDA, "\\"))
             tok = self.current_tok
-            if(tok.soort == Token.VAR):
+            if(tok.type == Token.VAR):
                 node.left = Node(Token.Token(Token.VAR, tok.var))
                 juist, node.right = self.lExpr()
                 if(juist == False):
