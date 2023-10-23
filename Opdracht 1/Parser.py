@@ -67,13 +67,6 @@ class Pars:
             self.current_tok = self.tokens[self.tok_idx]
         return self.current_tok
     
-    def back(self):
-        if(self.tok_idx > 0):
-            self.tok_idx -= 1
-            self.current_tok= self.token[self.tok_idx]
-        return self.current_tok
-
-
     def parse(self):
         self.root = self.expr(Node(Token.Token(Token.EMPTY, "EMPTY")))
         self.root = connectFamily(self.root)
