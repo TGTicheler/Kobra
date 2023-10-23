@@ -43,8 +43,17 @@ def verwerk(invoer):
             tokens.append(Token(RHAAK, ")"))
         elif invoer[i] == '\\'  or invoer[i] == 'λ':
             tokens.append(Token(LAMBDA, "\\"))
-        elif invoer [i] == ':':
+        elif invoer[i] == ':':
             tokens.append(Token(COLON, ":"))
+        elif invoer[i] == '^':
+            tokens.append(Token(CIRCUMFLEX, "^"))
+        elif invoer[i] == '-':
+            i += 1
+            if(invoer[i] == '>'):
+                tokens.append(Token(TO, "->"))
+            else:
+                print(f"Syntax error: wrong input.")
+                exit(1)
         elif invoer[i] in string.ascii_letters:
             var = ''
             if (invoer[i] in string.ascii_uppercase):
@@ -63,8 +72,8 @@ def verwerk(invoer):
             else:
                 tokens.append(Token(LVAR, var))
         else:
-            print(f"Onjuiste invoer")
-            exit(0)
+            print(f"Syntax error: wrong input.")
+            exit(1)
         i += 1
 
     tokens.append(Token(END, "END"))
