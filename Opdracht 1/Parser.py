@@ -66,12 +66,18 @@ class Pars:
         if self.tok_idx < len(self.tokens):
             self.current_tok = self.tokens[self.tok_idx]
         return self.current_tok
+    
+    def back(self):
+        if(self.tok_idx > 0):
+            self.tok_idx -= 1
+            self.current_tok= self.token[self.tok_idx]
+        return self.current_tok
+
 
     def parse(self):
-        juist, self.root = self.expr()
+        self.root = self.expr(Node(Token.Token(Token.EMPTY, "EMPTY")))
         self.root = connectFamily(self.root)
         self.root.stringTeruggeven()
-        self.root.printPreOrder()
         print()
         return self.root
         
@@ -84,39 +90,49 @@ class Pars:
             return True, Node(Token.Token(Token.VAR, tok.var))
         elif(tok.type == Token.LHAAK):
             self.lhaakjes += 1
-            juist, node = self.expr()
-            if(juist == True):
-                tok = self.current_tok
-                if(tok.type == Token.RHAAK):
-                    self.lhaakjes -= 1
-                    return True, node
-                else:
-                    print(f"Syntax error: right bracket not found after an opening left bracket.")
-                    exit(1)
+            node = self.expr(Node(Token.Token(Token.EMPTY, "EMPTY")))
+            tok = self.current_tok
+            if(tok.type == Token.RHAAK):
+                self.lhaakjes -= 1
+                return True, node
             else:
-                print(f"Syntax error: no expression found between two brackets.")
+                print(f"Syntax error: right bracket not found after an opening left bracket.")
                 exit(1)
 
         return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
         
-    def lExpr(self):
+    def lExpr(self, passed):
         self.advance()
         tok = self.current_tok
-        juist, node = self.pExpr()
+        juist, temp = self.pExpr()
         if(self.lhaakjes == 0 and tok.type == Token.RHAAK):
             exit(0)
         elif(juist == True):
+            if(passed.token.type == Token.EMPTY):
+                node = temp
+            else:
+                appl = Node(Token.Token(Token.APPL, "@"))
+                appl.left = passed
+                appl.right = temp
+                node = appl
             return True, node
         elif(tok.type == Token.LAMBDA):
             self.advance()
-            node = Node(Token.Token(Token.LAMBDA, "\\"))
+            lamb = Node(Token.Token(Token.LAMBDA, "\\"))
             tok = self.current_tok
             if(tok.type == Token.VAR):
-                node.left = Node(Token.Token(Token.VAR, tok.var))
-                juist, node.right = self.lExpr()
+                lamb.left = Node(Token.Token(Token.VAR, tok.var))
+                juist, lamb.right = self.lExpr(Node(Token.Token(Token.EMPTY, "EMPTY")))
                 if(juist == False):
                     print(f"Syntax error: left expresssion not found.")
                     exit(1)
+                elif(passed.token.type == Token.EMPTY):
+                    node = lamb
+                else:
+                    appl = Node(Token.Token(Token.APPL, "@"))
+                    appl.left = passed
+                    appl.right = lamb
+                    node = appl
                 return True, node
             else:
                 print(f"Syntax error: no variable found after \\")
@@ -124,32 +140,20 @@ class Pars:
         
         return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
     
-    def dashExpr(self):
-        juist, left = self.lExpr()
+    def dashExpr(self, passed):
+        juist, temp = self.lExpr(passed)
         if(juist == True):
-            nietLeeg, right = self.dashExpr()
-            if(nietLeeg == True):
-                node = Node(Token.Token(Token.APPL, "@"))
-                node.left = left
-                node.right = right
-            else:
-                node = left
-            return True, node
-        return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
+            node = self.dashExpr(temp)
+            return node
+        return passed
 
-    def expr(self):
-        juist, left = self.lExpr()
+    def expr(self, passed):
+        juist, temp = self.lExpr(passed)
         if (juist == False):
             print(f"Syntax error: wrong input.")
             exit(1)
-        nietLeeg, right = self.dashExpr()
-        if(nietLeeg == True):
-            node = Node(Token.Token(Token.APPL, "@"))
-            node.left = left
-            node.right = right
-        else:
-            node = left
-        return True, node
+        node = self.dashExpr(temp)
+        return node
     
 def connectFamily(node):
     if node.left != None:

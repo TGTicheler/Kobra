@@ -28,5 +28,5 @@ reduceThis = reductions.reduce(root)
 reduced = reduceThis.run()
 
 
-print("exit status 1")
+print("exit status 0")
 exit(0)

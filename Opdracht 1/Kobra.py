@@ -14,11 +14,11 @@ import Parser
 
 invoer = input('Voer een expressie in:\t')
 # leest vanuit de command line in
-while(invoer != "exit"):
+while("exit" not in invoer):
     verwerkt = Token.verwerk(invoer)
     geparset = Parser.Pars(verwerkt)
     root = geparset.parse()
     invoer = input('Voer een expressie in:\t')
 
-
+print("exit status 0")
 exit(0)
