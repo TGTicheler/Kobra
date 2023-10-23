@@ -1,3 +1,9 @@
+#  ____  __.          ___.                      
+# |    |/ _|   ____   \_ |__   _______  _____   
+# |      <    /  _ \   | __ \  \_  __ \ \__  \  
+# |    |  \  (  <_> )  | \_\ \  |  | \/  / __ \_
+# |____|__ \  \____/   |___  /  |__|    (____  /
+#         \/               \/                \/ 
 # Paul Tielens s3612031
 # Thom Ticheler s3696820
 # Laura Faas s3443159
@@ -28,7 +34,6 @@ class Node:
 
         if self.right:
             self.right.printPreOrder()
-    
 
     def stringTeruggeven(self):
         if(self.token.type == Token.VAR):
@@ -49,17 +54,13 @@ class Node:
 
         print(")", end="")
 
-
-
-
 class Pars:
     def __init__(self, tokens):
         self.tokens = tokens
         self.tok_idx = -1
         self.lhaakjes = 0
         self.root = None
-
-
+        
     def advance(self):
         self.tok_idx += 1
         if self.tok_idx < len(self.tokens):
@@ -70,18 +71,15 @@ class Pars:
         juist, self.root = self.expr()
         self.root = connectFamily(self.root)
         self.root.stringTeruggeven()
+        self.root.printPreOrder()
         print()
         return self.root
-
-
         
-
-
     def pExpr(self):
         tok = self.current_tok
         if(self.lhaakjes == 0 and tok.type == Token.RHAAK):
-            print('ERROR een rhaakje zonder lhaakje---------')
-            exit(0)
+            print(f"Syntax error: right bracket found without an opening left bracket.")
+            exit(1)
         elif(tok.type == Token.VAR):
             return True, Node(Token.Token(Token.VAR, tok.var))
         elif(tok.type == Token.LHAAK):
@@ -93,11 +91,11 @@ class Pars:
                     self.lhaakjes -= 1
                     return True, node
                 else:
-                    print('ERROR geen Rhaakje --------------')
-                    exit(0)
+                    print(f"Syntax error: right bracket not found after an opening left bracket.")
+                    exit(1)
             else:
-                print('ERROR geen expressie in ( )---------------')
-                exit(0)
+                print(f"Syntax error: no expression found between two brackets.")
+                exit(1)
 
         return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
         
@@ -117,12 +115,12 @@ class Pars:
                 node.left = Node(Token.Token(Token.VAR, tok.var))
                 juist, node.right = self.lExpr()
                 if(juist == False):
-                    print('ERROR mist lExpr-------------')
-                    exit(0)
+                    print(f"Syntax error: left expresssion not found.")
+                    exit(1)
                 return True, node
             else:
-                print('ERROR geen variabele bij Lambda-----------------')
-                exit(0)
+                print(f"Syntax error: no variable found after \\")
+                exit(1)
         
         return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
     
@@ -142,8 +140,8 @@ class Pars:
     def expr(self):
         juist, left = self.lExpr()
         if (juist == False):
-            print("Onjuiste invoer")
-            exit(0)
+            print(f"Syntax error: wrong input.")
+            exit(1)
         nietLeeg, right = self.dashExpr()
         if(nietLeeg == True):
             node = Node(Token.Token(Token.APPL, "@"))
@@ -154,11 +152,11 @@ class Pars:
         return True, node
     
 def connectFamily(node):
-    if (node.left != None):
+    if node.left != None:
         node.left.parent = node
         node.left = connectFamily(node.left)
 
-    if (node.right != None):
+    if node.right != None:
         node.right.parent = node
         node.right = connectFamily(node.right)
 
