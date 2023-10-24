@@ -36,7 +36,7 @@ class Node:
             self.right.printPreOrder()
 
     def stringTeruggeven(self):
-        if(self.token.type == Token.VAR):
+        if(self.token.type == Token.LVAR or self.token.type == Token.UVAR):
             print(self.token.var, end="")
             return
 
@@ -50,6 +50,10 @@ class Node:
         elif (self.token.type == Token.APPL):
             self.left.stringTeruggeven()
             print(" ", end="")
+            self.right.stringTeruggeven()
+        elif (self.token.type == Token.TO):
+            self.left.stringTeruggeven()
+            print(f"{self.token.var}", end="")
             self.right.stringTeruggeven()
 
         print(")", end="")
@@ -147,6 +151,59 @@ class Pars:
             exit(1)
         node = self.dashExpr(temp)
         return node
+    
+
+
+
+    def Type(self):
+        self.advance()
+        tok = self.current_tok
+        if(tok.type == Token.UVAR):
+            nietLeeg, right = self.TypePrime()
+            node = Node(Token.Token(Token.UVAR, tok.var))
+            if(nietLeeg == True):
+                to = Node(Token.Token(Token.TO, "->"))
+                to.left = node
+                to.right = right
+                node = to
+            return True, node
+        elif(tok.type == Token.LHAAK):
+            juist, node = self.Type()
+            if(juist == True):
+                tok = self.current_tok
+                if(tok.type != Token.RHAAK):
+                    print(f"Syntax error: right bracket not found after an opening left bracket.")
+                    print("exit status 1")
+                    exit(1)
+                
+                nietLeeg, right = self.TypePrime()
+                if(nietLeeg == True):
+                    to = Node(Token.Token(Token.TO, "->"))
+                    to.left = node
+                    to.right = right
+                    node = to
+                return True, node
+            else:
+                print(f"Syntax error: incorrect type.")
+                print("exit status 1")
+                exit(1)
+        else:
+            return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
+            
+
+    def TypePrime(self):
+        self.advance()
+        tok = self.current_tok
+        if(tok.type == Token.TO):
+            juist, node = self.Type()
+            if(juist == True):
+                return True, node
+            else:
+                print(f"Syntax error: incorrect type.")
+                print("exit status 1")
+                exit(1)
+        return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
+
     
 def connectFamily(node):
     if node.left != None:
