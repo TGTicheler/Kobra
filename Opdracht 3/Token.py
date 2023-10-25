@@ -77,5 +77,4 @@ def verwerk(invoer):
         i += 1
 
     tokens.append(Token(END, "END"))
-
     return tokens

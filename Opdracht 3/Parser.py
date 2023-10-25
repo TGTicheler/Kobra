@@ -19,11 +19,12 @@ class Node:
         self.right = None
         self.token = token
         self.parent = None
+        self.ty = None
 
     def __repr__(self):
-        if self.type == Token.VAR:
+        if self.token.type == Token.LVAR or self.token.type == Token.UVAR:
             return f'{self.type}:{self.var}'
-        return f'{self.type}'
+        return f'{self.token.type}'
 
     #pre-order
     def printPreOrder(self):
@@ -39,13 +40,21 @@ class Node:
         if(self.token.type == Token.LVAR or self.token.type == Token.UVAR):
             print(self.token.var, end="")
             return
+        elif(self.token.type == Token.COLON):
+            self.left.stringTeruggeven()
+            print(":", end="")
+            self.right.stringTeruggeven()
+        # elif(self.ty == None):
+        #     return
 
         print("(", end="")
 
         if (self.token.type == Token.LAMBDA):
             print(f"{self.token.var}", end="")
             self.left.stringTeruggeven()
-            print(" ", end="")
+            print("^", end="")
+            self.ty.stringTeruggeven()
+            print(" ", end= "")
             self.right.stringTeruggeven()
         elif (self.token.type == Token.APPL):
             self.left.stringTeruggeven()
@@ -70,10 +79,24 @@ class Pars:
         if self.tok_idx < len(self.tokens):
             self.current_tok = self.tokens[self.tok_idx]
         return self.current_tok
+    
+    def back(self):
+        if self.tok_idx > 0:
+            self.tok_idx -= 1
+            self.current_tok = self.tokens[self.tok_idx]
+        return self.current_tok
 
     def parse(self):
         self.root = self.expr(Node(Token.Token(Token.EMPTY, "EMPTY")))
-        self.root = connectFamily(self.root)
+        tok = self.current_tok
+        if(tok.type != Token.COLON):
+            print("Syntax error: missing ':'.")
+            exit(1)
+        colon = Node(Token.Token(Token.COLON, ":"))
+        colon.left = self.root
+        disposable, colon.right = self.Type()
+        self.root = colon
+        # self.root = connectFamily(self.root)
         self.root.stringTeruggeven()
         print()
         return self.root
@@ -83,8 +106,8 @@ class Pars:
         if(self.lhaakjes == 0 and tok.type == Token.RHAAK):
             print(f"Syntax error: right bracket found without an opening left bracket.")
             exit(1)
-        elif(tok.type == Token.VAR):
-            return True, Node(Token.Token(Token.VAR, tok.var))
+        elif(tok.type == Token.LVAR):
+            return True, Node(Token.Token(Token.LVAR, tok.var))
         elif(tok.type == Token.LHAAK):
             self.lhaakjes += 1
             node = self.expr(Node(Token.Token(Token.EMPTY, "EMPTY")))
@@ -103,7 +126,8 @@ class Pars:
         tok = self.current_tok
         juist, temp = self.pExpr()
         if(self.lhaakjes == 0 and tok.type == Token.RHAAK):
-            exit(0)
+            print(f"Syntax error: right bracket found without an opening left bracket.")
+            exit(1)
         elif(juist == True):
             if(passed.token.type == Token.EMPTY):
                 node = temp
@@ -117,11 +141,26 @@ class Pars:
             self.advance()
             lamb = Node(Token.Token(Token.LAMBDA, "\\"))
             tok = self.current_tok
-            if(tok.type == Token.VAR):
-                lamb.left = Node(Token.Token(Token.VAR, tok.var))
+            if(tok.type == Token.LVAR):
+                lamb.left = Node(Token.Token(Token.LVAR, tok.var))
+                self.advance()
+                tok = self.current_tok
+                if(tok.type != Token.CIRCUMFLEX):
+                    print(tok)
+                    print("Syntax error: missing '^'.")
+                    exit(1)
+                juist, circumflex = self.Type()
+                if(juist == False):
+                    print("Syntax error: missing type in abstraction.")
+                    print("exit status 1")
+                    exit(1)
+                lamb.ty = circumflex
+                self.back()
                 juist, lamb.right = self.lExpr(Node(Token.Token(Token.EMPTY, "EMPTY")))
                 if(juist == False):
-                    print(f"Syntax error: left expresssion not found.")
+                    print(self.current_tok)
+                    print(f"Syntax error: expresssion in abstraction not found.")
+                    print("exit status 1")
                     exit(1)
                 elif(passed.token.type == Token.EMPTY):
                     node = lamb
