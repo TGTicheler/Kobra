@@ -24,7 +24,7 @@ with open(file) as f:
 verwerkt = Token.verwerk(invoer)
 geparset = Parser.Pars(verwerkt)
 root = geparset.parse()
-
-
+root.stringTeruggeven()
+print()
 print("exit status 0")
 exit(0)

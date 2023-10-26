@@ -44,8 +44,8 @@ class Node:
             self.left.stringTeruggeven()
             print(":", end="")
             self.right.stringTeruggeven()
-        # elif(self.ty == None):
-        #     return
+            return
+
 
         print("(", end="")
 
@@ -94,11 +94,20 @@ class Pars:
             exit(1)
         colon = Node(Token.Token(Token.COLON, ":"))
         colon.left = self.root
-        disposable, colon.right = self.Type()
+        juist, colon.right = self.Type()
+        if(juist == False):
+            print("Error: missing type.")
+            print("exit status 1")
+            exit(1)
         self.root = colon
-        # self.root = connectFamily(self.root)
-        self.root.stringTeruggeven()
-        print()
+        self.root = connectFamily(self.root)
+        kVars = []
+        uVars =[]
+        self.seekUnkownType(self.root.left, kVars, uVars)
+        if (uVars != []):
+            print(f"Error: {uVars} have unkown types.")
+            print("exit status 1")
+            exit(1)
         return self.root
         
     def pExpr(self):
@@ -146,8 +155,8 @@ class Pars:
                 self.advance()
                 tok = self.current_tok
                 if(tok.type != Token.CIRCUMFLEX):
-                    print(tok)
                     print("Syntax error: missing '^'.")
+                    print("exit status 1")
                     exit(1)
                 juist, circumflex = self.Type()
                 if(juist == False):
@@ -191,8 +200,6 @@ class Pars:
         node = self.dashExpr(temp)
         return node
     
-
-
 
     def Type(self):
         self.advance()
@@ -244,6 +251,18 @@ class Pars:
         return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
 
     
+    def seekUnkownType(self, node, kVars, Uvars):
+        if(node.token.type == Token.LAMBDA and node.left.token.var not in kVars):
+            kVars.append(node.left.token.var)
+        elif(node.token.var not in kVars and node.token.type == Token.LVAR and node.token.var not in Uvars):
+            Uvars.append(node.token.var)
+        
+        if(node.left != None):
+            self.seekUnkownType(node.left, kVars, Uvars)
+        if(node.right != None):
+            self.seekUnkownType(node.right, kVars, Uvars)
+
+
 def connectFamily(node):
     if node.left != None:
         node.left.parent = node
@@ -252,5 +271,9 @@ def connectFamily(node):
     if node.right != None:
         node.right.parent = node
         node.right = connectFamily(node.right)
+
+    if node.ty != None:
+        node.ty.parent = node
+        node.ty = connectFamily(node.ty)
 
     return node
