@@ -92,18 +92,6 @@ class reduce:
                 M = node.left.right
                 M = self.replaceNode(M, var, N)
                 return M
-            elif (node.right.token.type== Token.LAMBDA):
-                node.parent = None
-                N = node.left
-                Nvars = []
-                self.collectVars(N, Nvars)
-                oldVars =[]
-                newVars = []
-                node.right = self.alphaCon(node.right, oldVars, newVars, Nvars)
-                var = node.right.left.token.var
-                M = node.right.right
-                M = self.replaceNode(M, var, N)
-                return M
             else:
                 print("Onjuist voor beta reduction")
         else:
@@ -115,7 +103,7 @@ class reduce:
         if (self.current > self.max ):
             return node
         elif (node.token.type== Token.APPL):
-            if(node.left.token.type== Token.LAMBDA or node.right.token.type== Token.LAMBDA):
+            if(node.left.token.type== Token.LAMBDA):
                 self.current += 1
                 node = self.betaRed(node)
                 if(self.current <= self.max):
