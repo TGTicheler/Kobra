@@ -13,18 +13,25 @@
 import Token
 import Parser
 import reductions
+import os.path
 
 # leest vanuit de command line in
 print("Filename: ")
 file = input('---< ')
-invoer = "\n"
-with open(file) as f:
-    while (invoer == "\n"): #pakt de eerste regel die tekst erin heeft staan
-        invoer = f.readline()
-verwerkt = Token.verwerk(invoer)
-geparset = Parser.Pars(verwerkt)
-root = geparset.parse()
-root.stringTeruggeven()
-print()
+
+if(os.path.isfile(file)== False):
+    print("File not found")
+    print("exit status 1")
+    exit(1)
+
+lines = open(file).readlines()
+for line in lines:
+    if (line != '\n'):
+        verwerkt = Token.verwerk(line)
+        geparset = Parser.Pars(verwerkt)
+        root = geparset.parse()
+        root.stringTeruggeven()
+        print()
+
 print("exit status 0")
 exit(0)
