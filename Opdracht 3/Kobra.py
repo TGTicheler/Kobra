@@ -12,7 +12,6 @@
 
 import Token
 import Parser
-import reductions
 import os.path
 
 # leest vanuit de command line in

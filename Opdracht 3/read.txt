@@ -1,4 +1,4 @@
-(\y^A (\x^(A -> (C -> A)) (x y))): (A -> (A -> C -> A) -> C -> A)
+(\y^A (\x^(A -> (C -> A)) (x    y))): (A -> (A -> C -> A) -> C -> A)
 
 (\x^B (\x^A x)):(B -> (A -> A))
 
@@ -10,5 +10,4 @@
 
 (x y):A
 
-leest alleen de bovenste regel
-de regels eronder zijn voorbeelden om te gebruiken
+
