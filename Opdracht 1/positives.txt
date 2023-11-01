@@ -1,0 +1,11 @@
+(a b)
+abc
+a b c
+a (b c)
+(\ x a b)
+(\x((a) (b)))
+\x \x \x \x x
+a b \x a
+a1b \x a
+\x AB
+λx a
