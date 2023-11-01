@@ -1,8 +1,8 @@
 # Makefile for simple Python program
 build:
-echo "nothing to build"
+	echo "nothing to build"
 run:
-python tool.py < positives.txt
+	python Kobra.py < positives.txt
 
 # python tool.py positives.txt
 
