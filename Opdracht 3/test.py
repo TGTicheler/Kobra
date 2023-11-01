@@ -1,12 +1,13 @@
-import string
-import Token
-import Parser
+# import string
+# import Token
+# import Parser
 
-invoer = "A -> B -> C -> D"
+array = [1,2,2,45,5,6,8]
 
 
-verwerkt = Token.verwerk(invoer)
-geparset = Parser.Pars(verwerkt)
-boeie, root = geparset.Type()
-root.stringTeruggeven()
-print()
+
+
+
+i = 1
+if(i in array):
+    print(array.index(i))

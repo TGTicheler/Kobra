@@ -1,7 +1,7 @@
 import Parser
 import Token
 
-class check:
+class Checker:
     def __init__(self, expression, type):
         self.expression = expression
         self.type = type
@@ -12,6 +12,7 @@ class check:
     # def giveCorrectType(self, node):
 
 
-    def typeCheck(self, node, vars, types):
+    # def typeCheck(self, node, vars, types):
+    #     if(node.Token)
 
 
