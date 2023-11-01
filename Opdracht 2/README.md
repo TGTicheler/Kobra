@@ -8,3 +8,5 @@ In token.py is a function that takes in a string of an equation of lambda calcul
 This array is then parsed in parser.py and put in an abstract syntax tree
 
 Python stops by itself after 1000 doing the same recursive step.
+
+makevar kan alleen maar variabelen maken van a-z en A-Z als deze allemaal bezet zijn, geen idee wat er gebeurd

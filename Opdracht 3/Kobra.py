@@ -32,6 +32,9 @@ for line in lines:
         root = geparset.parse()
         root.stringTeruggeven()
         print()
+        check = Checker.Checker(root.left, root.right)
+        check.check()
+        print()
 
 print("exit status 0")
 exit(0)
