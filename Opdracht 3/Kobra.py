@@ -30,11 +30,10 @@ for line in lines:
         verwerkt = Token.verwerk(line)
         geparset = Parser.Pars(verwerkt)
         root = geparset.parse()
-        root.stringTeruggeven()
+        root.stringPrinten()
         print()
         check = Checker.Checker(root.left, root.right)
         check.check()
-        print()
 
 print("exit status 0")
 exit(0)

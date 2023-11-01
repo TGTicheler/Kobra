@@ -2,12 +2,13 @@
 # import Token
 # import Parser
 
-array = [1,2,2,45,5,6,8]
+def test(string):
+    hopelijk = " ja ja "
+    string += hopelijk
+    return string
 
 
+bla = "akfj k"
 
-
-
-i = 1
-if(i in array):
-    print(array.index(i))
+bla = test(bla)
+print(bla)

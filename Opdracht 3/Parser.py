@@ -18,11 +18,10 @@ class Node:
         self.left = None
         self.right = None
         self.token = token
-        self.parent = None
 
     def __repr__(self):
         if self.token.type == Token.LVAR or self.token.type == Token.UVAR:
-            return f'{self.type}:{self.var}'
+            return f'{self.token.type}:{self.token.var}'
         return f'{self.token.type}'
 
     #pre-order
@@ -35,18 +34,47 @@ class Node:
         if self.right:
             self.right.printPreOrder()
 
-    def stringTeruggeven(self):
+    def stringTeruggeven(self, string):
+        if(self.token.type == Token.LVAR or self.token.type == Token.UVAR):
+            string += self.token.var
+            if(self.token.type == Token.LVAR):
+                string += " ["
+                string = self.left.stringTeruggeven(string)
+                string += " ]"
+            return string
+        elif(self.token.type == Token.COLON):
+            string = self.left.stringTeruggeven(string)
+            string += ":"
+            string = self.right.stringTeruggeven(string)
+            return string
+
+        string += "("
+
+        if (self.token.type == Token.TO):
+            string = self.left.stringTeruggeven(string)
+            string += "->"
+            string = self.right.stringTeruggeven(string)
+
+        string += ")"
+        return string
+
+
+
+
+
+
+    def stringPrinten(self):
         if(self.token.type == Token.LVAR or self.token.type == Token.UVAR):
             print(self.token.var, end="")
-            if(self.token.type == Token.LVAR):
-                print(f" [", end='')
-                self.left.stringTeruggeven()
-                print("] ", end='')
+            # if(self.token.type == Token.LVAR):
+            #     print(f" [", end='')
+            #     self.left.stringPrinten()
+            #     print("] ", end='')
             return
         elif(self.token.type == Token.COLON):
-            self.left.stringTeruggeven()
+            self.left.stringPrinten()
             print(":", end="")
-            self.right.stringTeruggeven()
+            self.right.stringPrinten()
             return
 
 
@@ -54,19 +82,19 @@ class Node:
 
         if (self.token.type == Token.LAMBDA):
             print(f"{self.token.var}", end="")
-            self.left.stringTeruggeven()
+            self.left.stringPrinten()
             print("^", end="")
-            self.left.left.stringTeruggeven()
+            self.left.left.stringPrinten()
             print(" ", end= "")
-            self.right.stringTeruggeven()
+            self.right.stringPrinten()
         elif (self.token.type == Token.APPL):
-            self.left.stringTeruggeven()
+            self.left.stringPrinten()
             print(" ", end="")
-            self.right.stringTeruggeven()
+            self.right.stringPrinten()
         elif (self.token.type == Token.TO):
-            self.left.stringTeruggeven()
+            self.left.stringPrinten()
             print(f"{self.token.var}", end="")
-            self.right.stringTeruggeven()
+            self.right.stringPrinten()
 
         print(")", end="")
 
@@ -283,13 +311,13 @@ class Pars:
             self.seekUnkownType(node.right, kVars, Uvars)
 
 
-def connectFamily(node):
-    if node.left != None:
-        node.left.parent = node
-        node.left = connectFamily(node.left)
+# def connectFamily(node):
+#     if node.left != None:
+#         node.left.parent = node
+#         node.left = connectFamily(node.left)
 
-    if node.right != None:
-        node.right.parent = node
-        node.right = connectFamily(node.right)
+#     if node.right != None:
+#         node.right.parent = node
+#         node.right = connectFamily(node.right)
 
-    return node
+#     return node
