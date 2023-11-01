@@ -12,6 +12,7 @@
 
 import Token
 import Parser
+import Checker
 import os.path
 
 # leest vanuit de command line in

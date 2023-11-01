@@ -19,7 +19,6 @@ class Node:
         self.right = None
         self.token = token
         self.parent = None
-        self.ty = None
 
     def __repr__(self):
         if self.token.type == Token.LVAR or self.token.type == Token.UVAR:
@@ -53,7 +52,7 @@ class Node:
             print(f"{self.token.var}", end="")
             self.left.stringTeruggeven()
             print("^", end="")
-            self.ty.stringTeruggeven()
+            self.left.left.stringTeruggeven()
             print(" ", end= "")
             self.right.stringTeruggeven()
         elif (self.token.type == Token.APPL):
@@ -163,7 +162,7 @@ class Pars:
                     print("Syntax error: missing type in abstraction.")
                     print("exit status 1")
                     exit(1)
-                lamb.ty = circumflex
+                lamb.left.left = circumflex
                 self.back()
                 juist, lamb.right = self.lExpr(Node(Token.Token(Token.EMPTY, "EMPTY")))
                 if(juist == False):
@@ -271,9 +270,5 @@ def connectFamily(node):
     if node.right != None:
         node.right.parent = node
         node.right = connectFamily(node.right)
-
-    if node.ty != None:
-        node.ty.parent = node
-        node.ty = connectFamily(node.ty)
 
     return node
