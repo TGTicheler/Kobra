@@ -52,6 +52,10 @@ class reduce:
                 vars = Nvars + subVars
                 self.collectVars(node.right,vars)
                 new = self.makeVar(vars)
+                if(new == None):
+                    print("Too many variables, could not make a new variable")
+                    print("exit status 1")
+                    exit(1)
                 subVars.append(new)
                 node.left.token.var = new
                 node.right = self.alphaCon(node.right, oldVars, subVars, Nvars)
