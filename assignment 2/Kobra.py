@@ -15,12 +15,8 @@ import Parser
 import reductions
 
 # leest vanuit de command line in
-print("Filename: ")
-file = input('---< ')
-invoer = "\n"
-with open(file) as f:
-    while (invoer == "\n"): #pakt de eerste regel die tekst erin heeft staan
-        invoer = f.readline()
+# print("Filename: ")
+invoer = input()
 verwerkt = Token.verwerk(invoer)
 geparset = Parser.Pars(verwerkt)
 root = geparset.parse()

@@ -12,6 +12,11 @@ Laura Faas s3443159
 This program works correctly, there aren't any known defects.
 There aren't any deviations from the assignment. 
 
+To run the program type:
+make run
+alternatively:
+python3 Kobra.py < ".txt file"
+
 All the sentences with 'must' and 'should' are implemented.
 The following sentences with 'may' are not implemented:
 - The explanation about the format
