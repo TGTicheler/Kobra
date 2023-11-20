@@ -14,7 +14,6 @@ import Token
 import Parser
 import Checker
 import os.path
-import argparse
 import sys
 
 file = sys.argv[1]
