@@ -14,10 +14,10 @@ import Token
 import Parser
 import Checker
 import os.path
+import argparse
+import sys
 
-# leest vanuit de command line in
-print("Filename: ")
-file = input('---< ')
+file = sys.argv[1]
 
 if(os.path.isfile(file)== False):
     print("File not found")
