@@ -13,6 +13,7 @@
 import Token
 import Parser
 import Checker
+# standard library code used for getting and checking the argument file
 import os.path
 import sys
 
