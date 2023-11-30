@@ -9,8 +9,16 @@
 # Laura Faas s3443159
 # Concepts of Programming Languages, 2023
 
+# Takes in a string of Lambda calculus, which is then parsed
+
 import Token
 import Parser
+import sys
+
+if(len(sys.argv) > 1):
+    print("No command line arguments")
+    print("exit status 1")
+    exit(1)
 
 givenString = input() 
 tokens = Token.verwerk(givenString) # array of tokens of the given string

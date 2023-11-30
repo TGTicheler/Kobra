@@ -2,9 +2,7 @@
 build:
 	echo "nothing to build"
 run:
-	python3 Kobra.py < positives.txt
-
-# python tool.py positives.txt
+	python3 Kobra.py positives.txt
 
 # alternatively:
 # python tool.py < positives.txt
