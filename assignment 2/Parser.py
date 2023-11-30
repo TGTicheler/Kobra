@@ -35,7 +35,7 @@ class Node:
         if self.right:
             self.right.printPreOrder()
 
-    def stringTeruggeven(self):
+    def printTree(self):
         if(self.token.type == Token.VAR):
             print(self.token.var, end="")
             return
@@ -44,13 +44,13 @@ class Node:
 
         if (self.token.type == Token.LAMBDA):
             print(f"{self.token.var}", end="")
-            self.left.stringTeruggeven()
+            self.left.printTree()
             print(" ", end="")
-            self.right.stringTeruggeven()
+            self.right.printTree()
         elif (self.token.type == Token.APPL):
-            self.left.stringTeruggeven()
+            self.left.printTree()
             print(" ", end="")
-            self.right.stringTeruggeven()
+            self.right.printTree()
 
         print(")", end="")
 
@@ -59,7 +59,7 @@ class Pars:
         self.tokens = tokens
         self.tok_idx = -1
         self.lhaakjes = 0
-        self.root = None
+        self.root = self.expr(Node(Token.Token(Token.EMPTY, "EMPTY")))
         
     def advance(self):
         self.tok_idx += 1
@@ -67,11 +67,7 @@ class Pars:
             self.current_tok = self.tokens[self.tok_idx]
         return self.current_tok
     
-    def parse(self):
-        self.root = self.expr(Node(Token.Token(Token.EMPTY, "EMPTY")))
-        self.root = connectFamily(self.root)
-        self.root.stringTeruggeven()
-        print()
+    def getRoot(self):
         return self.root
         
     def pExpr(self):

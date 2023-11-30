@@ -12,16 +12,13 @@ class reduce:
         self.max = 1000
         self.current = 0
         self.root = root
-
-    def run(self):
-        reduced = self.seekBeta(self.root)
+        self.reduced = self.seekBeta(self.root)
         if(self.current >= self.max):
             print(f"Meer dan {self.max} Beta reductions uitgevoerd, expressie reduceren wordt gestopt.")
             print("Uiteindelijke expressie: ")
-        self.current = 0
-        reduced.stringTeruggeven()
-        print()
-        return reduced
+
+    def getReducedTree(self):
+        return self.reduced
 
     def makeVar(self, vars):
         for i in range(len(string.ascii_letters)):

@@ -32,11 +32,15 @@ if(os.path.isfile(file)== False):
 with open(file) as f:
     firstLine = f.readline()
 
-verwerkt = Token.extractTokens(firstLine)
-geparset = Parser.Pars(verwerkt)
-root = geparset.parse()
+tokens = Token.extractTokens(firstLine) # array of tokens of the string
+obj = Parser.Pars(tokens)
+root = obj.getRoot() # the root of the ast of the unreduced expression
+root.printTree()
+print()
 reduceThis = reductions.reduce(root)
-reduced = reduceThis.run()
+reduced = reduceThis.getReducedTree()
+reduced.printTree()
+print()
 
 print("exit status 0")
 exit(0)
