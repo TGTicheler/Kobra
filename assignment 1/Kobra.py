@@ -15,6 +15,7 @@ import Token
 import Parser
 import sys
 
+# checks if there are command line arguments
 if(len(sys.argv) > 1):
     print("No command line arguments")
     print("exit status 1")
