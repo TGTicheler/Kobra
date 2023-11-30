@@ -14,19 +14,34 @@
 import Token
 import Parser
 import sys
+import os.path
 
-# checks if there are command line arguments
-if(len(sys.argv) > 1):
-    print("No command line arguments")
+# can read a whole file or a string from stdin, depending on the number of command line arguments
+if(len(sys.argv) == 1):
+    toBeParced = {input()} # only 1 string needs to be parced
+elif(len(sys.argv) == 2):
+    file = sys.argv[1]
+
+    #checks if the file exists
+    if(os.path.isfile(file)== False):
+        print("File not found")
+        print("exit status 1")
+        exit(1)
+
+    toBeParced = open(file).readlines() # all the strings in the file
+else:
+    print("Only 0 or 1 command line arguments can be given")
     print("exit status 1")
     exit(1)
 
-givenString = input() 
-tokens = Token.extractTokens(givenString) # array of tokens of the given string
-obj = Parser.Pars(tokens)
-root = obj.getRoot() # the root of the ast
-root.printTree()
-print()
+# all the strings in "lines" are being parced
+for currentString in toBeParced:
+    if (currentString != '\n'):
+        tokens = Token.extractTokens(currentString) # array of tokens of the given string
+        obj = Parser.Pars(tokens)
+        root = obj.getRoot() # the root of the ast
+        root.printTree()
+        print()
 
 print("exit status 0")
 exit(0)
