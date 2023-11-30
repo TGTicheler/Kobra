@@ -34,26 +34,26 @@ class Node:
         if self.right:
             self.right.printPreOrder()
 
-    def stringTeruggeven(self, string):
+    def giveTreeInString(self, string):
         if(self.token.type == Token.LVAR or self.token.type == Token.UVAR):
             string += self.token.var
             if(self.token.type == Token.LVAR):
                 string += " ["
-                string = self.left.stringTeruggeven(string)
+                string = self.left.giveTreeInString(string)
                 string += " ]"
             return string
         elif(self.token.type == Token.COLON):
-            string = self.left.stringTeruggeven(string)
+            string = self.left.giveTreeInString(string)
             string += ":"
-            string = self.right.stringTeruggeven(string)
+            string = self.right.giveTreeInString(string)
             return string
 
         string += "("
 
         if (self.token.type == Token.TO):
-            string = self.left.stringTeruggeven(string)
+            string = self.left.giveTreeInString(string)
             string += "->"
-            string = self.right.stringTeruggeven(string)
+            string = self.right.giveTreeInString(string)
 
         string += ")"
         return string
@@ -63,18 +63,14 @@ class Node:
 
 
 
-    def stringPrinten(self):
+    def printString(self):
         if(self.token.type == Token.LVAR or self.token.type == Token.UVAR):
             print(self.token.var, end="")
-            # if(self.token.type == Token.LVAR):
-            #     print(f" [", end='')
-            #     self.left.stringPrinten()
-            #     print("] ", end='')
             return
         elif(self.token.type == Token.COLON):
-            self.left.stringPrinten()
+            self.left.printString()
             print(":", end="")
-            self.right.stringPrinten()
+            self.right.printString()
             return
 
 
@@ -82,19 +78,19 @@ class Node:
 
         if (self.token.type == Token.LAMBDA):
             print(f"{self.token.var}", end="")
-            self.left.stringPrinten()
+            self.left.printString()
             print("^", end="")
-            self.left.left.stringPrinten()
+            self.left.left.printString()
             print(" ", end= "")
-            self.right.stringPrinten()
+            self.right.printString()
         elif (self.token.type == Token.APPL):
-            self.left.stringPrinten()
+            self.left.printString()
             print(" ", end="")
-            self.right.stringPrinten()
+            self.right.printString()
         elif (self.token.type == Token.TO):
-            self.left.stringPrinten()
+            self.left.printString()
             print(f"{self.token.var}", end="")
-            self.right.stringPrinten()
+            self.right.printString()
 
         print(")", end="")
 
@@ -103,7 +99,22 @@ class Pars:
         self.tokens = tokens
         self.tok_idx = -1
         self.lhaakjes = 0
-        self.root = None
+        vars = []
+        types = []
+        self.root = self.expr(Node(Token.Token(Token.EMPTY, "EMPTY")), vars, types)
+        tok = self.current_tok
+        if(tok.type != Token.COLON):
+            print("Syntax error: missing ':'")
+            print("exit status 1")
+            exit(1)
+        colon = Node(Token.Token(Token.COLON, ":"))
+        colon.left = self.root
+        juist, colon.right = self.Type()
+        if(juist == False):
+            print("Error: missing type.")
+            print("exit status 1")
+            exit(1)
+        self.root = colon
         
     def advance(self):
         self.tok_idx += 1
@@ -117,30 +128,7 @@ class Pars:
             self.current_tok = self.tokens[self.tok_idx]
         return self.current_tok
 
-    def parse(self):
-        vars = []
-        types = []
-        self.root = self.expr(Node(Token.Token(Token.EMPTY, "EMPTY")), vars, types)
-        tok = self.current_tok
-        if(tok.type != Token.COLON):
-            print("Syntax error: missing ':'.")
-            exit(1)
-        colon = Node(Token.Token(Token.COLON, ":"))
-        colon.left = self.root
-        juist, colon.right = self.Type()
-        if(juist == False):
-            print("Error: missing type.")
-            print("exit status 1")
-            exit(1)
-        self.root = colon
-        # self.root = connectFamily(self.root)
-        # kVars = []
-        # uVars =[]
-        # self.seekUnkownType(self.root.left, kVars, uVars)
-        # if (uVars != []):
-        #     print(f"Error: {uVars} have unkown types.")
-        #     print("exit status 1")
-        #     exit(1)
+    def getRoot(self):
         return self.root
         
     def pExpr(self, vars, types):
@@ -309,15 +297,3 @@ class Pars:
             self.seekUnkownType(node.left, kVars, Uvars)
         if(node.right != None):
             self.seekUnkownType(node.right, kVars, Uvars)
-
-
-# def connectFamily(node):
-#     if node.left != None:
-#         node.left.parent = node
-#         node.left = connectFamily(node.left)
-
-#     if node.right != None:
-#         node.right.parent = node
-#         node.right = connectFamily(node.right)
-
-#     return node

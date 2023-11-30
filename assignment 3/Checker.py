@@ -16,19 +16,15 @@ class Checker:
     def __init__(self, expression, type):
         self.expression = expression
         self.type = type
-        self.madeType = None
-
-    def check(self):
         self.madeType = self.typeCheck(self.expression)
         str1 = ""
         str2 = ""
-        str1 = self.madeType.stringTeruggeven(str1)
-        str2 = self.type.stringTeruggeven(str2)
+        str1 = self.madeType.giveTreeInString(str1)
+        str2 = self.type.giveTreeInString(str2)
         if(str1 != str2):
             print("error: Expression and Type do not match")
             print("exit status 1")
             exit(1)
-
 
 
     def typeCheck(self, node):
@@ -42,8 +38,8 @@ class Checker:
             right = self.typeCheck(node.right)
             strLeftLeft = ""
             strRight = ""
-            strLeftLeft = left.left.stringTeruggeven(strLeftLeft)
-            strRight = right.stringTeruggeven(strRight)
+            strLeftLeft = left.left.giveTreeInString(strLeftLeft)
+            strRight = right.giveTreeInString(strRight)
 
             if(left.token.type == Token.TO and strLeftLeft == strRight ):
                 return left.right

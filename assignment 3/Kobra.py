@@ -9,6 +9,8 @@
 # Laura Faas s3443159
 # Concepts of Programming Languages, 2023
 
+# goes through the file given as a command line argument
+# gets multiple judgements and checks if they are correct
 
 import Token
 import Parser
@@ -17,23 +19,29 @@ import Checker
 import os.path
 import sys
 
-file = sys.argv[1]
+# Checks if the amount of arguments is correct
+if len(sys.argv) != 2:
+    print("One command line argument is needed")
+    print("exit status 1")
+    exit(1)
 
+# Checks if the given file can be opened
+file = sys.argv[1]
 if(os.path.isfile(file)== False):
     print("File not found")
     print("exit status 1")
     exit(1)
 
+# reads all the lines of the given file
 lines = open(file).readlines()
-for line in lines:
-    if (line != '\n'):
-        verwerkt = Token.verwerk(line)
-        geparset = Parser.Pars(verwerkt)
-        root = geparset.parse()
-        root.stringPrinten()
+for oneLine in lines:
+    if (oneLine != '\n'):
+        tokens = Token.verwerk(oneLine) # array of tokens of the given string
+        parced = Parser.Pars(tokens)
+        root = parced.getRoot() # the root of the ast
+        root.printString()
         print()
-        check = Checker.Checker(root.left, root.right)
-        check.check()
+        Checker.Checker(root.left, root.right) # checks if the judgement is correct
 
 print("exit status 0")
 exit(0)
