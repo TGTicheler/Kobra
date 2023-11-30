@@ -21,7 +21,7 @@ if(len(sys.argv) > 1):
     exit(1)
 
 givenString = input() 
-tokens = Token.verwerk(givenString) # array of tokens of the given string
+tokens = Token.extractTokens(givenString) # array of tokens of the given string
 obj = Parser.Pars(tokens)
 root = obj.getRoot() # the root of the ast
 root.printTree()

@@ -68,13 +68,15 @@ class Pars:
         self.lparentheses = 0 
         # recursive descent for parsing is started
         self.root = self.expr(Node(Token.Token(Token.EMPTY, "EMPTY")))
-        
+    
+    # advances to the next token in the array
     def advance(self):
-        self.tokensIndex += 1
         if self.tokensIndex < len(self.tokens):
+            self.tokensIndex += 1
             self.currentToken = self.tokens[self.tokensIndex]
         return self.currentToken
     
+    # gives the root of the ast
     def getRoot(self):
         return self.root
 
@@ -160,6 +162,7 @@ class Pars:
 
     # checks if current token is a lexpr if so 
     # returns the corresponding sub abstract syntax tree
+    # if not nothing happens
     # "leftChild" is used to make applications left-associative    
     def exprApo(self, passed):
         juist, temp = self.lExpr(passed)
@@ -170,6 +173,7 @@ class Pars:
 
     # checks if current token is a lexpr if so 
     # returns the corresponding sub abstract syntax tree
+    # if not then error is thrown
     # "leftChild" is used to make applications left-associative
     def expr(self, passed):
         juist, temp = self.lExpr(passed)

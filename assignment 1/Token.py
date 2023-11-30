@@ -34,27 +34,27 @@ class Token:
     
 # gets a string gives the tokens of the string
 # and checks if there are illegal characters
-def verwerk(invoer):
+def extractTokens(givenString):
     tokens = []
-    grootte = len(invoer)
+    size = len(givenString)
     i = 0
     # goes through the string and creates an array of tokens
-    while i < grootte:
-        if invoer[i] == ' ' or invoer[i] == '\n' or invoer[i] == '\r':
+    while i < size:
+        if givenString[i] == ' ' or givenString[i] == '\n' or givenString[i] == '\r':
             pass # these are skipped
-        elif invoer[i] == '(':
+        elif givenString[i] == '(':
             tokens.append(Token(LPAR, "("))
-        elif invoer[i] == ')':
+        elif givenString[i] == ')':
             tokens.append(Token(RPAR, ")"))
-        elif invoer[i] == '\\' or invoer[i] == 'λ':
+        elif givenString[i] == '\\' or givenString[i] == 'λ':
             tokens.append(Token(LAMBDA, "\\"))
-        elif invoer[i] in string.ascii_letters:
+        elif givenString[i] in string.ascii_letters:
             var = ''
             # one variable can have multiple letters or digits
-            while(invoer[i] in string.ascii_letters or invoer[i].isnumeric()):
-                var = var + invoer[i]
+            while(givenString[i] in string.ascii_letters or givenString[i].isnumeric()):
+                var = var + givenString[i]
                 i += 1
-                if(i >= grootte):
+                if(i >= size):
                     break
             i -= 1
             tokens.append(Token(VAR, var))
