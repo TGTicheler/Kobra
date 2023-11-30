@@ -28,7 +28,7 @@ class reduce:
             print("Too many reduction steps performed")
             print("exit status 1")
             exit(1)
-            
+
     # gives the root of the reduced ast
     def getReducedTree(self):
         return self.reduced
@@ -40,7 +40,7 @@ class reduce:
             if(string.ascii_letters[i] not in vars):
                 return string.ascii_letters[i]
 
-    # collects all of the variables in an ast        
+    # collects all of the variables in an ast and adds it to "vars"       
     def collectVars(self, node, vars):
         if(self.currentRed > self.maxRed ):
             return
@@ -69,24 +69,28 @@ class reduce:
         if(self.currentRed > self.maxRed ):
             return node
         elif(node.token.type == Token.VAR):
+            # checks from the latest changed vars if the current var needs to be changed
             for i in range(len(oldVars)-1, -1, -1):
                 if (oldVars[i] == node.token.var):
                     node.token.var = subVars[i]
                     return node
-        elif(node.token.type== Token.LAMBDA):
+        elif(node.token.type == Token.LAMBDA):
+            # checks if there is a variable in N that is bound here
             if(node.left.token.var in Nvars):
                 oldVars.append(node.left.token.var)
-                vars = Nvars + subVars
-                self.collectVars(node.right,vars)
-                new = self.makeVar(vars)
-                if(new == None):
+                vars = Nvars + subVars 
+                self.collectVars(node.right,vars) # the new variable cannot have already been used
+                newVar = self.makeVar(vars)
+                if(newVar == None):
                     print("Too many variables, could not make a new variable")
                     print("exit status 1")
                     exit(1)
-                subVars.append(new)
-                node.left.token.var = new
+                subVars.append(newVar)
+                node.left.token.var = newVar
                 node.right = self.alphaCon(node.right, oldVars, subVars, Nvars)
                 return node
+
+        # so it goes through the whole ast
         if(node.left != None):    
             node.left = self.alphaCon(node.left, oldVars, subVars, Nvars)
         if(node.right != None):
@@ -94,11 +98,11 @@ class reduce:
         return node
 
 
-
+    # looks recursively for the variable "old" to be replaced with the sub ast "new" 
     def replaceNode(self, node, old, new):
         if(self.currentRed > self.maxRed  ):
             return node
-        elif(node.token.type== Token.VAR):
+        elif(node.token.type == Token.VAR):
             if(node.token.var == old):
                 node = new
         else:
@@ -110,8 +114,8 @@ class reduce:
     def betaRed(self, node):
         if(self.currentRed > self.maxRed  ):
             return node
-        elif(node.token.type== Token.APPL):
-            if(node.left.token.type== Token.LAMBDA):
+        elif(node.token.type == Token.APPL):
+            if(node.left.token.type == Token.LAMBDA):
                 node.parent = None
                 N = node.right
                 Nvars = []
@@ -133,8 +137,8 @@ class reduce:
     def seekBeta(self, node):
         if (self.currentRed > self.maxRed ):
             return node
-        elif (node.token.type== Token.APPL):
-            if(node.left.token.type== Token.LAMBDA):
+        elif (node.token.type == Token.APPL):
+            if(node.left.token.type == Token.LAMBDA):
                 self.currentRed += 1
                 node = self.betaRed(node)
                 if(self.currentRed <= self.maxRed):
