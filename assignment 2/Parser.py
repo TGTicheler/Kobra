@@ -76,16 +76,16 @@ class Pars:
         
     def pExpr(self):
         tok = self.current_tok
-        if(self.lhaakjes == 0 and tok.type == Token.RHAAK):
+        if(self.lhaakjes == 0 and tok.type == Token.RPAR):
             print(f"Syntax error: right bracket found without an opening left bracket.")
             exit(1)
         elif(tok.type == Token.VAR):
             return True, Node(Token.Token(Token.VAR, tok.var))
-        elif(tok.type == Token.LHAAK):
+        elif(tok.type == Token.LPAR):
             self.lhaakjes += 1
             node = self.expr(Node(Token.Token(Token.EMPTY, "EMPTY")))
             tok = self.current_tok
-            if(tok.type == Token.RHAAK):
+            if(tok.type == Token.RPAR):
                 self.lhaakjes -= 1
                 return True, node
             else:
@@ -98,7 +98,7 @@ class Pars:
         self.advance()
         tok = self.current_tok
         juist, temp = self.pExpr()
-        if(self.lhaakjes == 0 and tok.type == Token.RHAAK):
+        if(self.lhaakjes == 0 and tok.type == Token.RPAR):
             exit(0)
         elif(juist == True):
             if(passed.token.type == Token.EMPTY):

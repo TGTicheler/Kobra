@@ -1,3 +1,9 @@
+#  ____  __.          ___.                      
+# |    |/ _|   ____   \_ |__   _______  _____   
+# |      <    /  _ \   | __ \  \_  __ \ \__  \  
+# |    |  \  (  <_> )  | \_\ \  |  | \/  / __ \_
+# |____|__ \  \____/   |___  /  |__|    (____  /
+#         \/               \/                \/ 
 # Paul Tielens s3612031
 # Thom Ticheler s3696820
 # Laura Faas s3443159
@@ -7,14 +13,15 @@
 
 import string
 
-LHAAK = 'L-HAAKJE'
-RHAAK = 'R-HAAKJE'
+LPAR = 'LEFT PARENTHESIS'
+RPAR = 'RIGHT PARENTHESIS'
 LAMBDA = 'LAMBDA'
 VAR = 'VARIABELE'
 APPL = 'APPLICATION'
 END = 'END'
 EMPTY = 'EMPTY'
 
+# token objects 
 class Token:
     def __init__(self, type, var):
         self.type = type
@@ -25,34 +32,37 @@ class Token:
             return f'{self.type}:{self.var}'
         return f'{self.type}'
     
-
-def verwerk(invoer):
+# gets a string gives the tokens of the string
+# and checks if there are illegal characters
+def extractTokens(givenString):
     tokens = []
-    grootte = len(invoer)
+    size = len(givenString)
     i = 0
-    while i < grootte:
-        if invoer[i] == ' ' or invoer[i] == '\n' or invoer[i] == '\r':
-            pass
-        elif invoer[i] == '(':
-            tokens.append(Token(LHAAK, "("))
-        elif invoer[i] == ')':
-            tokens.append(Token(RHAAK, ")"))
-        elif invoer[i] == '\\' or invoer[i] == 'λ':
+    # goes through the string and creates an array of tokens
+    while i < size:
+        if givenString[i] == ' ' or givenString[i] == '\n' or givenString[i] == '\r':
+            pass # these are skipped
+        elif givenString[i] == '(':
+            tokens.append(Token(LPAR, "("))
+        elif givenString[i] == ')':
+            tokens.append(Token(RPAR, ")"))
+        elif givenString[i] == '\\' or givenString[i] == 'λ':
             tokens.append(Token(LAMBDA, "\\"))
-        elif invoer[i] in string.ascii_letters:
+        elif givenString[i] in string.ascii_letters:
             var = ''
-            while(invoer[i] in string.ascii_letters or invoer[i].isnumeric()):
-                var = var + invoer[i]
+            # one variable can have multiple letters or digits
+            while(givenString[i] in string.ascii_letters or givenString[i].isnumeric()):
+                var = var + givenString[i]
                 i += 1
-                if(i >= grootte):
+                if(i >= size):
                     break
-            i-=1
+            i -= 1
             tokens.append(Token(VAR, var))
         else:
-            print(f"Onjuiste invoer")
-            exit(0)
+            print(f"Syntax error: wrong input.")
+            exit(1)
         i += 1
 
-    tokens.append(Token(END, "END"))
+    tokens.append(Token(END, "END")) # End of tokens
 
     return tokens

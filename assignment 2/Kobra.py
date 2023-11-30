@@ -32,7 +32,7 @@ if(os.path.isfile(file)== False):
 with open(file) as f:
     firstLine = f.readline()
 
-verwerkt = Token.verwerk(firstLine)
+verwerkt = Token.extractTokens(firstLine)
 geparset = Parser.Pars(verwerkt)
 root = geparset.parse()
 reduceThis = reductions.reduce(root)
