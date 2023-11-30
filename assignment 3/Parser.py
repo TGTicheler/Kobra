@@ -13,6 +13,7 @@
 
 import Token
 
+# the nodes which the ast is built from
 class Node:
     def __init__(self, token):
         self.left = None
@@ -24,7 +25,8 @@ class Node:
             return f'{self.token.type}:{self.token.var}'
         return f'{self.token.type}'
 
-    #pre-order
+    # prints, from the token, the tree in pre-order
+    # used for testing
     def printPreOrder(self):
         print(self.token.var, " ", end= "")
 
@@ -34,110 +36,122 @@ class Node:
         if self.right:
             self.right.printPreOrder()
 
-    def giveTreeInString(self, string):
+    # gives a string with only ⟨type⟩ grammar
+    def giveTypeInString(self, string):
         if(self.token.type == Token.LVAR or self.token.type == Token.UVAR):
             string += self.token.var
-            if(self.token.type == Token.LVAR):
-                string += " ["
-                string = self.left.giveTreeInString(string)
-                string += " ]"
             return string
-        elif(self.token.type == Token.COLON):
-            string = self.left.giveTreeInString(string)
-            string += ":"
-            string = self.right.giveTreeInString(string)
-            return string
-
+        
         string += "("
 
         if (self.token.type == Token.TO):
-            string = self.left.giveTreeInString(string)
+            string = self.left.giveTypeInString(string)
             string += "->"
-            string = self.right.giveTreeInString(string)
+            string = self.right.giveTypeInString(string)
 
         string += ")"
         return string
 
-
-
-
-
-
-    def printString(self):
+    # prints the judgement from the tree
+    def printTree(self):
         if(self.token.type == Token.LVAR or self.token.type == Token.UVAR):
             print(self.token.var, end="")
             return
         elif(self.token.type == Token.COLON):
-            self.left.printString()
+            self.left.printTree()
             print(":", end="")
-            self.right.printString()
+            self.right.printTree()
             return
-
 
         print("(", end="")
 
         if (self.token.type == Token.LAMBDA):
             print(f"{self.token.var}", end="")
-            self.left.printString()
+            self.left.printTree()
             print("^", end="")
-            self.left.left.printString()
+            self.left.left.printTree()
             print(" ", end= "")
-            self.right.printString()
+            self.right.printTree()
         elif (self.token.type == Token.APPL):
-            self.left.printString()
+            self.left.printTree()
             print(" ", end="")
-            self.right.printString()
+            self.right.printTree()
         elif (self.token.type == Token.TO):
-            self.left.printString()
+            self.left.printTree()
             print(f"{self.token.var}", end="")
-            self.right.printString()
+            self.right.printTree()
 
         print(")", end="")
 
+# builds an ast from an array of tokens
 class Pars:
+    # constructor
     def __init__(self, tokens):
         self.tokens = tokens
-        self.tok_idx = -1
-        self.lhaakjes = 0
+        self.tokensIndex = -1 # index of current token in the array
+        # amount of left parentheses minus amount of right parentheses
+        # can never be < 0
+        self.lparentheses = 0
+        # keep track of the type corresponding with the variable
         vars = []
         types = []
+        # recursive descent for parsing is started
         self.root = self.expr(Node(Token.Token(Token.EMPTY, "EMPTY")), vars, types)
+        # adding the type side to the ast        
         tok = self.current_tok
         if(tok.type != Token.COLON):
             print("Syntax error: missing ':'")
             print("exit status 1")
             exit(1)
         colon = Node(Token.Token(Token.COLON, ":"))
-        colon.left = self.root
-        juist, colon.right = self.Type()
+        colon.left = self.root # expression is the left side of the ast
+        juist, colon.right = self.Type() # type is the right side
         if(juist == False):
             print("Error: missing type.")
             print("exit status 1")
             exit(1)
         self.root = colon
-        
+
+    # advances to the next token in the array
     def advance(self):
-        self.tok_idx += 1
-        if self.tok_idx < len(self.tokens):
-            self.current_tok = self.tokens[self.tok_idx]
+        if self.tokensIndex < len(self.tokens):
+            self.tokensIndex += 1
+            self.current_tok = self.tokens[self.tokensIndex]
         return self.current_tok
     
+    # goes back to the previous token in the array
     def back(self):
-        if self.tok_idx > 0:
-            self.tok_idx -= 1
-            self.current_tok = self.tokens[self.tok_idx]
+        if self.tokensIndex > 0:
+            self.tokensIndex -= 1
+            self.current_tok = self.tokens[self.tokensIndex]
         return self.current_tok
 
+    # gives the root of the ast
     def getRoot(self):
         return self.root
+    
+    # The LL grammar that is used:
+    # ⟨judgement⟩ ::= ⟨expr⟩ ':' ⟨type⟩
+    # ⟨expr⟩ ::= ⟨lexpr⟩ ⟨expr'⟩
+    # ⟨expr'⟩ ::= ⟨lexpr⟩ ⟨expr'⟩ | Empty
+    # ⟨lexpr⟩ ::= ⟨pexpr⟩ | '\' ⟨var⟩ ⟨lexpr⟩
+    # ⟨pexpr⟩ ::= ⟨var⟩ | '(' ⟨expr⟩ ')'
+    # ⟨type⟩ ::= ⟨uvar⟩ ⟨type'⟩ | '(' ⟨type⟩ ')' ⟨type'⟩ 
+    # ⟨type'⟩ ::=  '->' ⟨type⟩ | Empty
         
+    # the next functions below are used to implement this LL grammar
+
+
+    # checks if current token is a variable or '(' ⟨expr⟩ ')'
+    # and returns a node of a variable or the node of the root of the expression    
     def pExpr(self, vars, types):
         tok = self.current_tok
-        if(self.lhaakjes == 0 and tok.type == Token.RHAAK):
+        if(self.lparentheses == 0 and tok.type == Token.RHAAK):
             print(f"Syntax error: right bracket found without an opening left bracket.")
             exit(1)
         elif(tok.type == Token.LVAR):
             lvar = Node(Token.Token(Token.LVAR, tok.var))
+            # checks if the variable has a type
             if(tok.var in vars):
                 lvar.left = types[vars.index(tok.var)]
             else:
@@ -146,36 +160,42 @@ class Pars:
                 exit(1)
             return True, lvar
         elif(tok.type == Token.LHAAK):
-            self.lhaakjes += 1
+            self.lparentheses += 1
             node = self.expr(Node(Token.Token(Token.EMPTY, "EMPTY")), vars, types)
             tok = self.current_tok
             if(tok.type == Token.RHAAK):
-                self.lhaakjes -= 1
+                self.lparentheses -= 1
                 return True, node
             else:
                 print(f"Syntax error: right bracket not found after an opening left bracket.")
                 exit(1)
 
         return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
-        
-    def lExpr(self, passed, vars, types):
+    
+    # checks if current token is a pexpr or an abstraction
+    # returns the corresponding sub abstract syntax tree
+    # "leftChild" is used to make applications left-associative
+    def lExpr(self, leftChild, vars, types):
         self.advance()
         tok = self.current_tok
-        juist, temp = self.pExpr(vars, types)
-        if(self.lhaakjes == 0 and tok.type == Token.RHAAK):
+        correct, temp = self.pExpr(vars, types)
+        # if there is a right paranthesis whithout any left parentheses left
+        if(self.lparentheses == 0 and tok.type == Token.RHAAK):
             print(f"Syntax error: right bracket found without an opening left bracket.")
             exit(1)
-        elif(juist == True):
-            if(passed.token.type == Token.EMPTY):
+        elif(correct == True):
+            # "leftChild" is used here to make applications left-associative
+            if(leftChild.token.type == Token.EMPTY):
                 node = temp
             else:
                 appl = Node(Token.Token(Token.APPL, "@"))
-                appl.left = passed
+                appl.left = leftChild
                 appl.right = temp
                 node = appl
             return True, node
         elif(tok.type == Token.LAMBDA):
             self.advance()
+            # making and returning an abstraction
             lamb = Node(Token.Token(Token.LAMBDA, "\\"))
             tok = self.current_tok
             if(tok.type == Token.LVAR):
@@ -187,31 +207,36 @@ class Pars:
                     print("Syntax error: missing '^'.")
                     print("exit status 1")
                     exit(1)
-                juist, circumflex = self.Type()
-
+                
+                # getting the type
+                correct, circumflex = self.Type()
+                # keeping track of the variables and their types
                 if(temp in vars):
                     types[vars.index(temp)] = circumflex
                 else:
                     vars.append(temp)
                     types.append(circumflex)
 
-                if(juist == False):
+                if(correct == False):
                     print("Syntax error: missing type in abstraction.")
                     print("exit status 1")
                     exit(1)
+                # variables now also have a child, their type
                 lamb.left.left = circumflex
                 self.back()
-                juist, lamb.right = self.lExpr(Node(Token.Token(Token.EMPTY, "EMPTY")), vars, types)
-                if(juist == False):
+                # checking if it has an expression
+                correct, lamb.right = self.lExpr(Node(Token.Token(Token.EMPTY, "EMPTY")), vars, types)
+                if(correct == False):
                     print(self.current_tok)
                     print(f"Syntax error: expresssion in abstraction not found.")
                     print("exit status 1")
                     exit(1)
-                elif(passed.token.type == Token.EMPTY):
+                elif(leftChild.token.type == Token.EMPTY):
                     node = lamb
                 else:
+                    # "leftChild" is used here to make applications left-associative
                     appl = Node(Token.Token(Token.APPL, "@"))
-                    appl.left = passed
+                    appl.left = leftChild
                     appl.right = lamb
                     node = appl
                 return True, node
@@ -221,29 +246,39 @@ class Pars:
         
         return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
     
-    def dashExpr(self, passed, vars, types):
-        juist, temp = self.lExpr(passed, vars, types)
+    # checks if current token is a lexpr if so 
+    # returns the corresponding sub abstract syntax tree
+    # if not nothing happens
+    # "leftChild" is used to make applications left-associative   
+    def exprApo(self, leftChild, vars, types):
+        juist, temp = self.lExpr(leftChild, vars, types)
         if(juist == True):
-            node = self.dashExpr(temp, vars, types)
+            node = self.exprApo(temp, vars, types)
             return node
-        return passed
+        return leftChild
 
-    def expr(self, passed, vars, types):
-        juist, temp = self.lExpr(passed, vars, types)
+    # checks if current token is a lexpr if so 
+    # returns the corresponding sub abstract syntax tree
+    # if not then error is thrown
+    # "leftChild" is used to make applications left-associative
+    def expr(self, leftChild, vars, types):
+        juist, temp = self.lExpr(leftChild, vars, types)
         if (juist == False):
             print(f"Syntax error: wrong input.")
             exit(1)
-        node = self.dashExpr(temp, vars, types)
+        node = self.exprApo(temp, vars, types)
         return node
     
-
+    # checks if current token is ⟨uvar⟩ or '(' ⟨type⟩ ')'
+    # returns the corresponding sub abstract syntax tree
+    # if not, then error is thrown
     def Type(self):
         self.advance()
         tok = self.current_tok
         if(tok.type == Token.UVAR):
-            nietLeeg, right = self.TypePrime()
+            notEmpty, right = self.TypePrime()
             node = Node(Token.Token(Token.UVAR, tok.var))
-            if(nietLeeg == True):
+            if(notEmpty == True):
                 to = Node(Token.Token(Token.TO, "->"))
                 to.left = node
                 to.right = right
@@ -258,8 +293,8 @@ class Pars:
                     print("exit status 1")
                     exit(1)
                 
-                nietLeeg, right = self.TypePrime()
-                if(nietLeeg == True):
+                notEmpty, right = self.TypePrime()
+                if(notEmpty == True):
                     to = Node(Token.Token(Token.TO, "->"))
                     to.left = node
                     to.right = right
@@ -270,9 +305,11 @@ class Pars:
                 print("exit status 1")
                 exit(1)
         else:
-            return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
+            print("Syntax error: wrong ⟨type⟩ input")
+            print("exit status 1")
+            exit(1)
             
-
+    # checks for '->' ⟨type⟩
     def TypePrime(self):
         self.advance()
         tok = self.current_tok
@@ -286,14 +323,3 @@ class Pars:
                 exit(1)
         return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
 
-    
-    def seekUnkownType(self, node, kVars, Uvars):
-        if(node.token.type == Token.LAMBDA and node.left.token.var not in kVars):
-            kVars.append(node.left.token.var)
-        elif(node.token.var not in kVars and node.token.type == Token.LVAR and node.token.var not in Uvars):
-            Uvars.append(node.token.var)
-        
-        if(node.left != None):
-            self.seekUnkownType(node.left, kVars, Uvars)
-        if(node.right != None):
-            self.seekUnkownType(node.right, kVars, Uvars)
