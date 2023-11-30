@@ -10,7 +10,7 @@ Class number: ...
 To run the program type:
 make run
 alternatively:
-python3 Kobra.py < ".txt file" 
+python3 Kobra.py ".txt file" 
 
 In token.py is a function that takes in a string of an equation of lambda calculus and makes an array of tokens based on this string. 
 This array is then parsed in parser.py and put in an abstract syntax tree

@@ -38,8 +38,8 @@ else:
 for currentString in toBeParced:
     if (currentString != '\n'):
         tokens = Token.extractTokens(currentString) # array of tokens of the given string
-        obj = Parser.Pars(tokens)
-        root = obj.getRoot() # the root of the ast
+        parced = Parser.Pars(tokens)
+        root = parced.getRoot() # the root of the ast
         root.printTree()
         print()
 

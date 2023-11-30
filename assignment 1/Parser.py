@@ -19,7 +19,6 @@ class Node:
         self.left = None
         self.right = None
         self.token = token
-        self.parent = None
 
     def __repr__(self):
         if self.type == Token.VAR:

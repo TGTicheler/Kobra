@@ -30,17 +30,18 @@ if(os.path.isfile(file)== False):
 
 # reads only the first line from the given file
 with open(file) as f:
-    firstLine = f.readline()
-
-tokens = Token.extractTokens(firstLine) # array of tokens of the string
-obj = Parser.Pars(tokens)
-root = obj.getRoot() # the root of the ast of the unreduced expression
-root.printTree()
-print()
-reduceThis = reductions.reduce(root)
-reduced = reduceThis.getReducedTree()
-reduced.printTree()
-print()
+    lines = f.readlines()
+    for oneLine in lines:
+        if (oneLine != '\n'):
+            tokens = Token.extractTokens(oneLine) # array of tokens of the given string
+            parced = Parser.Pars(tokens)
+            root = parced.getRoot() # the root of the ast
+            # root.printTree() ---------------------------------------- geen idee of dit ook moet worden uitgeprint
+            # print()
+            reduceThis = reductions.reduce(root)
+            reduced = reduceThis.getReducedTree() # the root of the reduced ast
+            reduced.printTree()
+            print()
 
 print("exit status 0")
 exit(0)

@@ -1,0 +1,13 @@
+TODO:
+- musts, mays en shoulds van vooral 1, 2 en 3
+- nieuwe organisatie met positives.txt uitlezen implementeren
+- vragen wat nou allemaal uitgeprint mag worden
+- errors beter maken
+- in 2 de maxReductions implementeren, python doet dit zelf
+- alles Engels maken
+- 1, 2 en 3 commenten
+
+
+DONE:
+- root directory checken met bash commando beneden
+bash test_directory_structure.sh | bash summarize_dir_test.sh
