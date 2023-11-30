@@ -52,7 +52,7 @@ class reduce:
             self.collectVars(node.right, vars)
 
     # for the functions below we use
-    # ((\x M) N) when reduced becomes:
+    # ((\x M) N), with M and N as sub ast's when reduced becomes:
     # M[x:=N]
     
     # if there are free/bound variables in N that are bound in M
@@ -111,21 +111,22 @@ class reduce:
 
         return node
 
+    # performs a beta reduction on the node that has been found
     def betaRed(self, node):
         if(self.currentRed > self.maxRed  ):
             return node
         elif(node.token.type == Token.APPL):
             if(node.left.token.type == Token.LAMBDA):
-                node.parent = None
                 N = node.right
                 Nvars = []
                 self.collectVars(N, Nvars)
                 oldVars =[]
                 newVars = []
+                # checks for an alpha-conversion
                 node.left = self.alphaCon(node.left, oldVars, newVars, Nvars)
                 var = node.left.left.token.var
                 M = node.left.right
-                M = self.replaceNode(M, var, N)
+                M = self.replaceNode(M, var, N) # performing M[x:=N]
                 return M
             else:
                 print("Onjuist voor beta reduction")
@@ -134,15 +135,18 @@ class reduce:
 
         return node
 
+    # goes through the ast recursively
+    # and seeks for the structure ((\x M) N), with M and N as sub ast's
+    # outputs the reduced version of it's given ast
     def seekBeta(self, node):
         if (self.currentRed > self.maxRed ):
             return node
         elif (node.token.type == Token.APPL):
             if(node.left.token.type == Token.LAMBDA):
-                self.currentRed += 1
-                node = self.betaRed(node)
+                self.currentRed += 1 # lukt niet, try en except wel
+                node = self.betaRed(node) # found a beta reduction
                 if(self.currentRed <= self.maxRed):
-                    node = self.seekBeta(node)
+                    node = self.seekBeta(node) # look for beta reductions on M[x:=N]
                 return node
         
         if(node.left != None):
@@ -150,6 +154,5 @@ class reduce:
         if(node.right != None):
             node.right = self.seekBeta(node.right)
 
-        return node            
-
-
+        return node
+    
