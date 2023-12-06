@@ -39,9 +39,10 @@ for oneLine in lines:
         tokens = Token.verwerk(oneLine) # array of tokens of the given string
         parced = Parser.Pars(tokens)
         root = parced.getRoot() # the root of the ast
+
+        Checker.Checker(root.left, root.right) # checks if the judgement is correct
         root.printTree()
         print()
-        Checker.Checker(root.left, root.right) # checks if the judgement is correct
 
 print("exit status 0")
 exit(0)

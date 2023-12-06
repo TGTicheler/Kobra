@@ -10,8 +10,9 @@ TODO:
 - alles Engels maken
 - 1, 2 en 3 commenten
 - makeVar oneindig variabelen kunnen laten maken
-- checken of de libraries niet external libraries zijn (dus met apt install ...)
+- checken of de libraries niet external libraries zijn (apt install ...)
 - volgorde van functies veranderen voor begrijpbaarheid
+- exit status 2 implementeren
 
 DONE:
 - root directory checken met bash commando beneden
