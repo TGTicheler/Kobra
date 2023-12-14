@@ -251,9 +251,9 @@ class Pars:
     # if not nothing happens
     # "leftChild" is used to make applications left-associative   
     def exprApo(self, leftChild, vars, types):
-        juist, temp = self.lExpr(leftChild, vars, types)
+        juist, passFurther = self.lExpr(leftChild, vars, types)
         if(juist == True):
-            node = self.exprApo(temp, vars, types)
+            node = self.exprApo(passFurther, vars, types)
             return node
         return leftChild
 
@@ -262,11 +262,11 @@ class Pars:
     # if not then error is thrown
     # "leftChild" is used to make applications left-associative
     def expr(self, leftChild, vars, types):
-        juist, temp = self.lExpr(leftChild, vars, types)
+        juist, passFurther = self.lExpr(leftChild, vars, types)
         if (juist == False):
             print(f"Syntax error: wrong input.")
             exit(1)
-        node = self.exprApo(temp, vars, types)
+        node = self.exprApo(passFurther, vars, types)
         return node
     
     # checks if current token is ⟨uvar⟩ or '(' ⟨type⟩ ')'
