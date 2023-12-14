@@ -164,9 +164,9 @@ class Pars:
     # if not nothing happens
     # "leftChild" is used to make applications left-associative    
     def exprApo(self, passed):
-        juist, temp = self.lExpr(passed)
+        juist, passFurther = self.lExpr(passed)
         if(juist == True):
-            node = self.exprApo(temp)
+            node = self.exprApo(passFurther)
             return node
         return passed
 
@@ -175,10 +175,10 @@ class Pars:
     # if not then error is thrown
     # "leftChild" is used to make applications left-associative
     def expr(self, passed):
-        juist, temp = self.lExpr(passed)
+        juist, passFurther = self.lExpr(passed)
         if (juist == False):
             print(f"Syntax error: wrong input.")
             exit(1)
-        node = self.exprApo(temp)
+        node = self.exprApo(passFurther)
         return node
     
