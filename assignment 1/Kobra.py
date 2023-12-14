@@ -24,8 +24,7 @@ elif(len(sys.argv) == 2):
 
     #checks if the file exists
     if(os.path.isfile(file)== False):
-        print("File not found")
-        print("exit status 1")
+        print("File not found", file=sys.stderr)
         exit(1)
 
     toBeParced = open(file).readlines() # all the strings in the file
