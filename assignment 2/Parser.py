@@ -170,7 +170,7 @@ class Pars:
             return node
         return passed
 
-    # checks if current token is a lexpr if so 
+    # checks if current token is a lexpr if so  
     # returns the corresponding sub abstract syntax tree
     # if not then error is thrown
     # "leftChild" is used to make applications left-associative
