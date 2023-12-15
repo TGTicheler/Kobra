@@ -1,13 +1,27 @@
+#  ____  __.          ___.                      
+# |    |/ _|   ____   \_ |__   _______  _____   
+# |      <    /  _ \   | __ \  \_  __ \ \__  \  
+# |    |  \  (  <_> )  | \_\ \  |  | \/  / __ \_
+# |____|__ \  \____/   |___  /  |__|    (____  /
+#         \/               \/                \/ 
+
 Paul Tielens s3612031
 Laura Faas s3443159
 Thom Ticheler s3696820
 
-# Kobra
+The compiler versions and operating systems:
+...
+...
+...
+
+The program works correctly, has no known defects and there are no deviations from the assignment.
 
 In token.py is a function that takes in a string of an equation of lambda calculus and makes an array of tokens based on this string. 
 This array is then parsed in parser.py and put in an abstract syntax tree
 
-Python stops by itself after 1000 doing the same recursive step.
+Parser.py ...
+
+Checker.py ...
 
 
 The Backus-Naur grammar that is used:
