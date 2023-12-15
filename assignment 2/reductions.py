@@ -26,7 +26,6 @@ class reduce:
             self.reduced = self.seekBeta(self.root)
         except:
             print("Too many reduction steps performed")
-            print("exit status 1")
             exit(1)
 
     # gives the root of the reduced ast
@@ -83,7 +82,6 @@ class reduce:
                 newVar = self.makeVar(vars)
                 if(newVar == None):
                     print("Too many variables, could not make a new variable")
-                    print("exit status 1")
                     exit(1)
                 subVars.append(newVar)
                 node.left.token.var = newVar
