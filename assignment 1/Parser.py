@@ -119,7 +119,6 @@ class Pars:
         # if there is a right paranthesis whithout any left parentheses left
         if(self.lparentheses == 0 and tok.type == Token.RPAR):
             print(f"Syntax error: right paranthesis found without an opening left paranthesis. 2")
-            print("exit status 1")
             exit(1)
         elif(correct == True):
             # "leftChild" is used here to make applications left-associative

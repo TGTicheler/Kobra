@@ -30,7 +30,6 @@ elif(len(sys.argv) == 2):
     toBeParced = open(file).readlines() # all the strings in the file
 else:
     print("Only 0 or 1 command line arguments can be given")
-    print("exit status 1")
     exit(1)
 
 # all the strings in "lines" are being parced
@@ -42,5 +41,4 @@ for currentString in toBeParced:
         root.printTree()
         print()
 
-print("exit status 0")
 exit(0)
