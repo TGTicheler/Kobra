@@ -36,5 +36,4 @@ A variable starts with the letter from the Latin alphabet (not with a digit).
 Whitespaces are used to separate application of two variables. 'λ' is accepted instead of '\'.
 If no parentheses are used, the order of presedence for the operators
 is as follows: lambda abstraction groups more strongly than application. And application associates to the left. The program does not support a dot after the lambda abstracion variable or anywhere else.
-The program can be exited by typing 'exit'.
 
