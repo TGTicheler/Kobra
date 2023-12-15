@@ -28,7 +28,6 @@ class Checker:
         str2 = self.givenType.giveTypeInString(str2)
         if(str1 != str2):
             print("error: Expression and Type do not match")
-            print("exit status 1")
             exit(1)
 
 
@@ -59,13 +58,11 @@ class Checker:
                 return left.right
             else:
                 print("Types are not matching")
-                print("exit status 1")
                 exit(1)
         elif(node.token.type == Token.LVAR):
             return node.left
         else:
             print("Type is wrong")
-            print("exit status 1")
             exit(1)
 
 

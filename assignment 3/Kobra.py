@@ -22,14 +22,12 @@ import sys
 # Checks if the amount of arguments is correct
 if len(sys.argv) != 2:
     print("One command line argument is needed")
-    print("exit status 1")
     exit(1)
 
 # Checks if the given file can be opened
 file = sys.argv[1]
 if(os.path.isfile(file)== False):
     print("File not found")
-    print("exit status 1")
     exit(1)
 
 # reads all the lines of the given file
@@ -44,5 +42,4 @@ for oneLine in lines:
         root.printTree()
         print()
 
-print("exit status 0")
 exit(0)

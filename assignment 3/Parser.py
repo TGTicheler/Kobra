@@ -101,14 +101,12 @@ class Pars:
         tok = self.current_tok
         if(tok.type != Token.COLON):
             print("Syntax error: missing ':'")
-            print("exit status 1")
             exit(1)
         colon = Node(Token.Token(Token.COLON, ":"))
         colon.left = self.root # expression is the left side of the ast
         juist, colon.right = self.Type() # type is the right side
         if(juist == False):
             print("Error: missing type.")
-            print("exit status 1")
             exit(1)
         self.root = colon
 
@@ -156,7 +154,6 @@ class Pars:
                 lvar.left = types[vars.index(tok.var)]
             else:
                 print(f"{tok.var} has unkown type")
-                print("exit status 1")
                 exit(1)
             return True, lvar
         elif(tok.type == Token.LHAAK):
@@ -205,7 +202,6 @@ class Pars:
                 tok = self.current_tok
                 if(tok.type != Token.CIRCUMFLEX):
                     print("Syntax error: missing '^'.")
-                    print("exit status 1")
                     exit(1)
                 
                 # getting the type
@@ -219,7 +215,6 @@ class Pars:
 
                 if(correct == False):
                     print("Syntax error: missing type in abstraction.")
-                    print("exit status 1")
                     exit(1)
                 # variables now also have a child, their type
                 lamb.left.left = circumflex
@@ -229,7 +224,6 @@ class Pars:
                 if(correct == False):
                     print(self.current_tok)
                     print(f"Syntax error: expresssion in abstraction not found.")
-                    print("exit status 1")
                     exit(1)
                 elif(leftChild.token.type == Token.EMPTY):
                     node = lamb
@@ -290,7 +284,6 @@ class Pars:
                 tok = self.current_tok
                 if(tok.type != Token.RHAAK):
                     print(f"Syntax error: right bracket not found after an opening left bracket.")
-                    print("exit status 1")
                     exit(1)
                 
                 notEmpty, right = self.TypePrime()
@@ -302,11 +295,9 @@ class Pars:
                 return True, node
             else:
                 print(f"Syntax error: incorrect type.")
-                print("exit status 1")
                 exit(1)
         else:
             print("Syntax error: wrong ⟨type⟩ input")
-            print("exit status 1")
             exit(1)
             
     # checks for '->' ⟨type⟩
@@ -319,7 +310,7 @@ class Pars:
                 return True, node
             else:
                 print(f"Syntax error: incorrect type.")
-                print("exit status 1")
                 exit(1)
+                
         return False, Node(Token.Token(Token.EMPTY, "EMPTY"))
 
