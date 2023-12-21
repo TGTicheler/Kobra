@@ -26,7 +26,7 @@ class reduce:
             self.reduced = self.seekBeta(self.root)
         except:
             print("Too many reduction steps performed")
-            exit(1)
+            exit(2)
 
     # gives the root of the reduced ast
     def getReducedTree(self):
