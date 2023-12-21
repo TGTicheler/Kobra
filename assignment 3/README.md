@@ -19,28 +19,21 @@ The program works correctly, has no known defects and there are no deviations fr
 In token.py is a function that takes in a string of an equation of lambda calculus and makes an array of tokens based on this string. 
 This array is then parsed in parser.py and put in an abstract syntax tree
 
-Parser.py ...
+Parser.py takes in an array of tokens and makes this into an abstract syntax tree. The tree is made by going a recursive descent through the LL grammar. While doing this the ast is built. The resulting output is the root of this ast. It exits the programm when there is an error.
+Types are given to variables by being assigned as their left child.
 
-Checker.py ...
-
-
-The Backus-Naur grammar that is used:
+The LL grammar that is used:
 ⟨judgement⟩ ::= ⟨expr⟩ ':' ⟨type⟩
-⟨expr⟩ ::= ⟨lvar⟩ | '(' ⟨expr⟩ ')' | '\' ⟨lvar⟩ '^' ⟨type⟩ ⟨expr⟩ | ⟨expr⟩ ⟨expr⟩
-⟨type⟩ ::= ⟨uvar⟩ | '(' ⟨type⟩ ')' | ⟨type⟩ '->' ⟨type⟩
-
-⟨type⟩ ::= ⟨uvar⟩ | '(' ⟨type⟩ ')' | ⟨type⟩ '->' ⟨type⟩
-⟨type⟩ ::=  '->' ⟨type⟩ | Empty
-
-
-Voor mezelf:
-⟨expr⟩ ::= ⟨var⟩ | '(' ⟨expr⟩ ')' | '\' ⟨var⟩ ⟨expr⟩ | ⟨expr⟩ ⟨expr⟩
-
-(ook voor mezelf) LL:
 ⟨expr⟩ ::= ⟨lexpr⟩ ⟨expr'⟩
 ⟨expr'⟩ ::= ⟨lexpr⟩ ⟨expr'⟩ | Empty
 ⟨lexpr⟩ ::= ⟨pexpr⟩ | '\' ⟨var⟩ ⟨lexpr⟩
 ⟨pexpr⟩ ::= ⟨var⟩ | '(' ⟨expr⟩ ')'
+
+⟨type⟩ ::= ⟨uvar⟩ ⟨type'⟩ | '(' ⟨type⟩ ')' ⟨type'⟩ 
+⟨type'⟩ ::=  '->' ⟨type⟩ | Empty
+
+To Checker.py the rast root of a judgement is given. From this judgement, the expresson is taken and the type is derived from this expression. Then the derived type and the given type are compared and checked if they are the same.
+
 
 
 

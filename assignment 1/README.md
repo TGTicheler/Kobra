@@ -24,7 +24,13 @@ The following sentences with 'may' are not implemented:
 - The output may use the least amount of whitespace and parenthese in its output
   
 The Backus-Naur grammar that is used:
-⟨expr⟩ ::= ⟨var⟩ | '(' ⟨expr⟩ ')' | '\' ⟨var⟩ ⟨expr⟩ | ⟨expr⟩ ⟨expr⟩
+⟨expr⟩ ::= ⟨var⟩ | '(' ⟨expr⟩ ')' | '\' ⟨var⟩ ⟨expr⟩ | ⟨expr⟩⟨expr⟩
+
+Is turned into the LL grammar:
+⟨expr⟩ ::= ⟨lexpr⟩ ⟨expr'⟩
+⟨expr'⟩ ::= ⟨lexpr⟩ ⟨expr'⟩ | Empty
+⟨lexpr⟩ ::= ⟨pexpr⟩ | '\' ⟨var⟩ ⟨lexpr⟩
+⟨pexpr⟩ ::= ⟨var⟩ | '(' ⟨expr⟩ ')'
 
 Explanantion (MAY):
 In token.py is a function that takes in a string of an equation of lambda calculus, the grammar is listed above, and makes an array of tokens based on this string.

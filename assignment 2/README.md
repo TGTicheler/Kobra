@@ -26,7 +26,13 @@ python3 Kobra.py ".txt file"
 In token.py is a function that takes in a string of an equation of lambda calculus and makes an array of tokens based on this string. 
 This array is then parsed in parser.py and put in an abstract syntax tree
 
-Parser.py
+Parser.py takes in an array of tokens and makes this into an abstract syntax tree. The tree is made by going a recursive descent through the LL grammar. While doing this the ast is built. The resulting output of Parser.py is the root of this ast with the ast. It exits the programm when there is an error.
+
+The LL grammar that is used:
+⟨expr⟩ ::= ⟨lexpr⟩ ⟨expr'⟩
+⟨expr'⟩ ::= ⟨lexpr⟩ ⟨expr'⟩ | Empty
+⟨lexpr⟩ ::= ⟨pexpr⟩ | '\' ⟨var⟩ ⟨lexpr⟩
+⟨pexpr⟩ ::= ⟨var⟩ | '(' ⟨expr⟩ ')'
 
 In reductions.py a correct ast is put in the class reduce, which looks for ((\x M) N) and then reduces it to M[x:=N].
 This is done by going through the ast and looking for ((\x M) N) (seekBeta()), then the program checks if any variable of N is bound in M.
